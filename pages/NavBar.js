@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 
 import Link from "next/link";
+import TakePicture from "@/components/AddCar";
 
 export default function NavBar() {
  
@@ -189,6 +190,7 @@ export default function NavBar() {
               ></Image>
             </div>
           </div>
+          <TakePicture/>
         </section>
         
       </div>
