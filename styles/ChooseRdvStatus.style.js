@@ -1,73 +1,71 @@
 import styled from "styled-components";
 
-export const CarInfos=styled.div`
-display:${props=>props.pictureTooked};
-flex-direction:row;
-position: absolute;
-  
+export const CarInfos = styled.div`
+  display: ${(props) => props.pictureTooked};
+  flex-direction: row;
+  position: absolute;
+
   top: 5vw;
   left: 2vw;
   justify-content: space-between;
-canvas {
+  canvas {
     border-radius: 20%;
     width: 30vw;
     height: 40vh;
     position: relative;
-
-    
   }
-  .rdvSet{
-    display:flex;
+  .marque {
+    display: flex;
   }
   button {
     border-radius: 20%;
     height: 10vh;
     width: 10vw;
   }
-  .SRDV {
+  .audi {
     background-color: steelblue;
   }
-  .RDV {
+  .skoda {
     background-color: green;
   }
-  .customerName {
+  .model {
     width: 20vw;
   }
-  .rdvTime {
-    
-    
-    
+  .vin {
+    width: 30vw;
+  }
+  .mec {
     width: 20vw;
-    height:5vh
+    height: 5vh;
   }
   @media screen and (max-width: 620px) {
     font-size: 5px;
 
-    .customerName {
+    .model {
       top: 1vh;
       left: 0vw;
       width: 100px;
     }
-    .rdvTime {
+    .vin {
+      top: 1vh;
+      left: 0vw;
+      width: 100px;
+    }
+    .mec {
       left: 0vw;
       top: 5vh;
       width: 100px;
     }
   }
-
-`
-
-export const CarCsSelection = styled.div`
-display:${props=>props.rdvState==false? "none" : "flex"};
-flex-direction:column;
-/* display:${props=>props.rdvSate=='--:-- --'? "none" : "flex"}; */
-
-`
-
-export const ChooseRdvStatus = styled.div`
-  
- 
 `;
+
+export const MiseEnCirculation = styled.div`
+  display: ${(props) => (props.rdvState == false ? "none" : "flex")};
+  flex-direction: column;
+  /* display:${(props) => (props.rdvSate == "--:-- --" ? "none" : "flex")}; */
+`;
+
+export const ChooseRdvStatus = styled.div``;
 
 export const RdvInfo = styled.div`
   position: absolute;
@@ -75,6 +73,4 @@ export const RdvInfo = styled.div`
   top: 15vh;
   left: 10vw;
   font-size: 1.7vw;
-
-  
 `;

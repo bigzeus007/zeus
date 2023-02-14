@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
-import { db,storage } from "../firebase";
+import { db, storage,auth } from "../firebase";
 import { ref, uploadString } from "firebase/storage";
 import {
   doc,
@@ -11,11 +11,7 @@ import {
 } from "firebase/firestore";
 import { TakePitureButton } from "../styles/TakePitureButton.styled";
 import NewButtonColored from "../styles/NewButtonColored.styled";
-import {
-  CarCsSelection,
-  CarInfos,
-
-} from "../styles/ChooseRdvStatus.style";
+import { MiseEnCirculation, CarInfos } from "../styles/ChooseRdvStatus.style";
 
 export default function TakePicture() {
   const videoRef = useRef(null);
@@ -23,24 +19,22 @@ export default function TakePicture() {
   const [hasPhoto, setHasPhoto] = useState(false);
   const [laboZone, setLaboZone] = useState(false);
   const [image, setImage] = useState(null);
-  const [createdAt, setCreatedAt] = useState(null);
+  
   const inputRef = useRef(null);
 
- const [vin, setVin]=useState("")
- const [marque, setMarque]=useState("")
- const [km, setKm]=useState("")
- const [model, setModel]=useState("")
- const [mec, setMec]=useState("")
- const [ass, setAss]=useState("")
- const [service, setService]=useState("")
-
-  
+  const [vin, setVin] = useState("");
+  const [marque, setMarque] = useState("");
+  const [km, setKm] = useState("");
+  const [model, setModel] = useState("");
+  const [mec, setMec] = useState("");
+  const [ass, setAss] = useState("");
+  const [service, setService] = useState("");
+  const userName = auth.currentUser.displayName;
 
   const submitMyCarPhot = (photo, photoId) => {
     const storageRef = ref(storage, `cars/${photoId}`);
     uploadString(storageRef, photo, "data_url").then(closePhoto);
   };
-
 
   const getVideo = () => {
     const constraints = {
@@ -67,7 +61,6 @@ export default function TakePicture() {
   const emptyInput = () => {
     let myInput = inputRef.current;
     myInput.value = null;
-    
   };
 
   // STOP CAMERA
@@ -76,7 +69,7 @@ export default function TakePicture() {
     const stream = videoElem.srcObject;
     const tracks = stream.getTracks();
 
-    tracks.forEach(function(track) {
+    tracks.forEach(function (track) {
       track.stop();
     });
 
@@ -84,7 +77,7 @@ export default function TakePicture() {
   };
 
   const takePhoto = () => {
-    const picTime = Date.now(); // old one = new Date()
+  
     const width = 250;
     const height = 480;
     let photo = photoRef.current;
@@ -98,23 +91,20 @@ export default function TakePicture() {
     const imageCaptured = photo.toDataURL();
 
     setImage(imageCaptured);
-    setCreatedAt(picTime);
+    
     emptyInput();
     setHasPhoto(true);
     stopStreamedVideo(video);
   };
-
-
 
   const closePhoto = () => {
     let photo = photoRef.current;
 
     let ctx = photo.getContext("2d");
     ctx.clearRect(0, 0, photo.width, photo.height);
-  
+
     setHasPhoto(false);
     setLaboZone(false);
-   
   };
   useEffect(() => {
     if (laboZone) {
@@ -127,25 +117,23 @@ export default function TakePicture() {
 
   const handleSubmit = async (image) => {
     const docRef = await addDoc(collection(db, "cars"), {
-   
       createdAt: serverTimestamp(),
-  
-      whereIsTheCar: "Parking-E",
 
-      isItInGoodPlace: true,
-      basyCar: false,
+      marque: {marque},
+      vin:{vin},
+      km:{km},
+      ass:{ass},
+      mec:{mec},
 
-
-      workingTeam: ["CRV", "CA", "Pisteur"],
+      
       carStory: [
         {
-          who: "Pisteur",
+          creator: {userName},
           when: new Date().toISOString().substring(0, 16),
-          what: "CarAdded",
+          
         },
       ],
 
-      historyComments: [{ initiator: "", time: "", text: "" }],
     });
     await submitMyCarPhot(image, docRef.id);
     await setDoc(
@@ -155,8 +143,6 @@ export default function TakePicture() {
       },
       { merge: true }
     );
-
-    
   };
 
   return laboZone ? (
@@ -169,32 +155,54 @@ export default function TakePicture() {
           ref={photoRef}
         />
         <div>
-          <input
-            className="customerName"
-            ref={inputRef}
-            type="text"
-            onChange={(e) => {}}
-            placeholder="NOM CLIENT"
-          ></input>
-          <div className="rdvSet">
-            <button className="SRDV" onClick={() => handlReturn()}>
-              SANS RDV
+          <div className="marque">
+            <button className="audi" onClick={(e) => setMarque("AUDI")}>
+              AUDI
             </button>
-            <button className="RDV" onClick={() => {}}>
-              AVEC RDV
+            <button className="skoda" onClick={(e) => setMarque("SKODA")}>
+              SKODA
             </button>
           </div>
+          <input
+            className="model"
+            ref={inputRef}
+            type="text"
+            onChange={(e) => setModel(e.target.value)}
+            placeholder="Model"
+          ></input>
 
-          <CarCsSelection>
+          <MiseEnCirculation>
+          <div>Date NMise en circulation</div>
             <input
-              className="rdvTime"
-              type="time"
-              onChange={(e) => setRdvTime(e.target.value)}
-              value={""}
+              className="mec"
+              type="date"
+              onChange={(e) => setMec(e.target.value)}
             ></input>
             <br />
-           
-          </CarCsSelection>
+          </MiseEnCirculation>
+          <MiseEnCirculation>
+            <div>Date fin assurance</div>
+            <input
+              className="mec"
+              type="date"
+              onChange={(e) => setAss(e.target.value)}
+            ></input>
+            <br />
+          </MiseEnCirculation>
+          <input
+            className="model"
+            ref={inputRef}
+            type="text"
+            onChange={(e) => setKm(e.target.value)}
+            placeholder="Km Actuel"
+          ></input>
+          <input
+            className="vin"
+            ref={inputRef}
+            type="text"
+            onChange={(e) => setVin(e.target.value)}
+            placeholder="Numero de chassis"
+          ></input>
 
           <NewButtonColored>
             <div className="subscribe">
@@ -210,7 +218,6 @@ export default function TakePicture() {
               <a
                 href="#"
                 onClick={() => handleSubmit(image)}
-              
                 className="btn-3d-sub"
               >
                 <span>submit</span>
