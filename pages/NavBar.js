@@ -15,32 +15,25 @@ import Link from "next/link";
 import TakePicture from "@/components/AddCar";
 
 export default function NavBar() {
- 
-
   const actualUser = query(
     collection(db, "users"),
     where("email", "==", `${auth.currentUser.email}`)
   );
   const [user, setUser] = useState({ nom: "" });
   useEffect(() => {
-    const fetchData= async ()=> {
-
+    const fetchData = async () => {
       const userData = await getDocs(actualUser);
-      userData.forEach((inUser) => setUser(inUser.data()))
-      };
-      fetchData();
-      
+      userData.forEach((inUser) => setUser(inUser.data()));
+    };
+    fetchData();
   }, []);
-
-  console.log(user);
 
   const photoProfil = auth.currentUser.photoURL
     ? auth.currentUser.photoURL
     : false;
 
-  console.log(photoProfil);
-
   const [toggle, setToggle] = useState("close");
+  const [rubrique, setRubrique] = useState(null);
   const [darkMode, setDarkMode] = useState("");
 
   const sideBarToggle = (toggle) => {
@@ -74,50 +67,45 @@ export default function NavBar() {
 
           <div className="menu-bar">
             <div className="menu">
-              <li className="search-box">
-                <i className="bx bx-search icon"></i>
-                <input type="text" placeholder="Search..." />
-              </li>
+              
 
-              <ul className="menu-links">
+              <ul className="menu-links" onClick={() => setRubrique("Parc")}>
                 <li className="nav-link">
                   <a href="#">
-                    <i className="bx bx-home-alt icon"></i>
-                    <span className="text nav-text">Parc SAV</span>
+                    <i className="bx bx-image-add icon"></i>
+                    <span className="text nav-text">Ajouter</span>
                   </a>
                 </li>
 
                 <li className="nav-link">
-                  <Link href="/Admin">
-                    <i className="bx bx-bar-chart-alt-2 icon"></i>
-                    <span className="text nav-text">Revenue</span>
-                  </Link>
+                  <i className="bx bxs-parking icon"></i>
+                  <span className="text nav-text">Courtoisie</span>
                 </li>
 
                 <li className="nav-link">
                   <a href="#">
-                    <i className="bx bx-bell icon"></i>
+                    <i className="bx bxs-car-garage icon"></i>
                     <span className="text nav-text">Notifications</span>
                   </a>
                 </li>
 
                 <li className="nav-link">
                   <a href="#">
-                    <i className="bx bx-pie-chart-alt icon"></i>
+                    <i className="bx bxs-car-mechanic icon"></i>
                     <span className="text nav-text">Analytics</span>
                   </a>
                 </li>
 
                 <li className="nav-link">
                   <a href="#">
-                    <i className="bx bx-heart icon"></i>
+                    <i className="bx bxs-car-wash icon"></i>
                     <span className="text nav-text">Likes</span>
                   </a>
                 </li>
 
                 <li className="nav-link">
                   <a href="#">
-                    <i className="bx bx-wallet icon"></i>
+                    <i className="bx bxs-car-battery icon"></i>
                     <span
                       className="text nav-text"
                       onClick={() => auth.signOut()}
@@ -190,11 +178,9 @@ export default function NavBar() {
               ></Image>
             </div>
           </div>
-          <TakePicture/>
+          {rubrique == "Parc" && <TakePicture />}
         </section>
-        
       </div>
-      
     </>
   );
 }

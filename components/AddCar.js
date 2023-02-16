@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
-import { db, storage,auth } from "../firebase";
+import { db, storage, auth } from "../firebase";
 import { ref, uploadString } from "firebase/storage";
 import {
   doc,
@@ -19,7 +19,7 @@ export default function TakePicture() {
   const [hasPhoto, setHasPhoto] = useState(false);
   const [laboZone, setLaboZone] = useState(false);
   const [image, setImage] = useState(null);
-  
+
   const inputRef = useRef(null);
 
   const [vin, setVin] = useState("");
@@ -33,7 +33,9 @@ export default function TakePicture() {
 
   const submitMyCarPhot = (photo, photoId) => {
     const storageRef = ref(storage, `cars/${photoId}`);
-    uploadString(storageRef, photo, "data_url").then(closePhoto);
+    uploadString(storageRef, image, "data_url").then(() => {
+      closePhoto();
+    });
   };
 
   const getVideo = () => {
@@ -43,6 +45,14 @@ export default function TakePicture() {
         facingMode: "environment",
       },
     };
+
+// Request permission from the user
+   navigator.permissions.query({ name: "camera" }).then((result) => {
+  if (result.state === "granted") {
+    // Check if the user has granted permission
+
+
+
 
     navigator.mediaDevices
       .getUserMedia(constraints)
@@ -56,7 +66,9 @@ export default function TakePicture() {
       .catch((err) => {
         console.error(err);
       });
-  };
+    }
+  });
+};
 
   const emptyInput = () => {
     let myInput = inputRef.current;
@@ -77,7 +89,6 @@ export default function TakePicture() {
   };
 
   const takePhoto = () => {
-  
     const width = 250;
     const height = 480;
     let photo = photoRef.current;
@@ -91,7 +102,7 @@ export default function TakePicture() {
     const imageCaptured = photo.toDataURL();
 
     setImage(imageCaptured);
-    
+
     emptyInput();
     setHasPhoto(true);
     stopStreamedVideo(video);
@@ -115,25 +126,22 @@ export default function TakePicture() {
   const [carStatus, setCarStatus] = useState("none");
   const takePictureSwitch = hasPhoto ? "flex" : "none";
 
+ const carsCollectionRef = collection(db, "cars");
   const handleSubmit = async (image) => {
-    const docRef = await addDoc(collection(db, "cars"), {
+    const docRef = await addDoc(carsCollectionRef, {
       createdAt: serverTimestamp(),
 
-      marque: {marque},
-      vin:{vin},
-      km:{km},
-      ass:{ass},
-      mec:{mec},
-
-      
+      marque: marque,
+      vin: vin,
+      km: km,
+      ass: ass,
+      mec: mec,
       carStory: [
         {
-          creator: {userName},
+          creator: userName ,
           when: new Date().toISOString().substring(0, 16),
-          
         },
       ],
-
     });
     await submitMyCarPhot(image, docRef.id);
     await setDoc(
@@ -172,7 +180,7 @@ export default function TakePicture() {
           ></input>
 
           <MiseEnCirculation>
-          <div>Date NMise en circulation</div>
+            <div>Date NMise en circulation</div>
             <input
               className="mec"
               type="date"
