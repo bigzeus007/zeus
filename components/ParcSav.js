@@ -1,71 +1,74 @@
-import { useState, useEffect } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import { db } from '@/firebase';
-import { collection, getDocs } from "firebase/firestore";   
+import { useState, useEffect } from "react";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { db, storage } from "../firebase";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { Card, Grid, Row, Text } from "@nextui-org/react";
+import CarCard from "./CarCard";
 
-/
-// define a function to fetch the cars data from firestore database
-const fetchCarsData = async (setCarsData) => {
-  const carsCollection = await getDocs(collection(db, "cars"));
-  carsCollection.forEach((snapshot) => {
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setCarsData(data);
-  });
-};
+export default function ParcSav() {
 
-// define the CarCard component
-const CarCard = ({ car }) => {
-  const [availability, setAvailability] = useState(car.availability);
+  const list = [
+    {
+      ass: "2023-02-11",
+  carStory: "",
+  createdAt: "",
+  id: "2A5EqufmXx9NX99qm8wV",
+  km: "56.74086.",
+  marque: "SKODA",
+  mec: "2023-02-10",
+  vin: "fgaafga",
+    }
+   
+  ];
 
-  const handleAvailabilityChange = (event) => {
-    const newAvailability = event.target.value;
-    setAvailability(newAvailability);
-    const carsCollection = firebase.firestore().collection('cars');
-    carsCollection.doc(car.id).update({ availability: newAvailability });
-  };
+ 
+  const parcListRef = collection(db, "cars");
+  const [cars, setCars] = useState([]);
+  
+  useEffect(()=>{
+    getDocs(parcListRef).then((querySnapshot) => {
+      const carsData = [];
+      querySnapshot.forEach((doc) => {
+        carsData.push(doc.data());
+      });
+      setCars(carsData);
+    }).catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+  },[])
 
-  return (
-    <div className="car-card">
-      <img src={car.image} alt={car.id} />
-      <p>
-        Availability:
-        <select value={availability} onChange={handleAvailabilityChange}>
-          <option value="available">Available</option>
-          <option value="unavailable">Unavailable</option>
-        </select>
-      </p>
-    </div>
-  );
-};
+  // cars? console.log(cars[0].id):{} ;
 
-// define the ParcSav component
-const ParcSav = () => {
-  const [carsData, setCarsData] = useState([]);
-
-  useEffect(() => {
-    fetchCarsData(setCarsData);
-  }, []);
-
-  const handleAddCar = async () => {
-    const carsCollection = await getDocs(collection(db, "cars"));
-    await carsCollection.add({ image: 'car-image-url', availability: 'available' });
-  };
+ 
 
   return (
-    <div className="home-page">
-      <h1>Car Inventory</h1>
-      <div className="car-cards">
-        {carsData.map((car) => (
-          <CarCard key={car.id} car={car} />
-        ))}
-      </div>
-      <button onClick={handleAddCar}>Add New Car</button>
-    </div>
+    <Grid.Container gap={2} justify="flex-start">
+      {
+      cars.map((item, index) => (
+        <Grid xs={6} sm={3} key={index}>
+          <Card isPressable>
+            <Card.Body css={{ p: 0 }}>
+              <CarCard props={item}
+              />
+            </Card.Body>
+            <Card.Footer css={{ justifyItems: "flex-start" }}>
+              <Row wrap="wrap" justify="space-between" align="center">
+                <Text b>{item.marque}</Text>
+                <Text
+                  css={{
+                    color: "$accents7",
+                    fontWeight: "$semibold",
+                    fontSize: "$sm",
+                  }}
+                >
+                  {item.vin}
+                </Text>
+              </Row>
+            </Card.Footer>
+          </Card>
+        </Grid>
+      ))}
+    </Grid.Container>
   );
-};
-
-export default ParcSav;
+}
