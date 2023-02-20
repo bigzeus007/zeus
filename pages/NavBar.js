@@ -13,6 +13,7 @@ import {
 
 import Link from "next/link";
 import TakePicture from "@/components/AddCar";
+import ParcSav from "@/components/ParcSav";
 
 export default function NavBar() {
   const actualUser = query(
@@ -69,15 +70,15 @@ export default function NavBar() {
             <div className="menu">
               
 
-              <ul className="menu-links" onClick={() => setRubrique("Parc")}>
-                <li className="nav-link">
-                  <a href="#">
+              <ul className="menu-links" >
+                <li className="nav-link" onClick={() => setRubrique("Parc")}>
+                  <a href="#" >
                     <i className="bx bx-image-add icon"></i>
                     <span className="text nav-text">Ajouter</span>
                   </a>
                 </li>
 
-                <li className="nav-link">
+                <li className="nav-link" onClick={() => setRubrique("ParcSav")}>
                   <i className="bx bxs-parking icon"></i>
                   <span className="text nav-text">Courtoisie</span>
                 </li>
@@ -179,6 +180,8 @@ export default function NavBar() {
             </div>
           </div>
           {rubrique == "Parc" && <TakePicture />}
+          {rubrique == "ParcSav" && <ParcSav />}
+
         </section>
       </div>
     </>

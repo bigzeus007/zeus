@@ -1,21 +1,35 @@
 import { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { db } from '@/firebase';
+import { db, storage} from '@/firebase';
 import { collection, getDocs } from "firebase/firestore";   
+import { Card, Grid, Row, Text } from "@nextui-org/react";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-export default function Card({car}) {
+export default function CarCard(car) {
+console.log(car.props.id)
+  const [carImage, setCarImage] = useState("");    
   
+  
+  const spaceRef = ref(storage, `cars/${car.props.id}`);
 
+  useEffect(()=>{
+    getDownloadURL(spaceRef)
+    .then((url) => setCarImage(url))
+    .catch((err) =>console.log(err))
+
+  },[])
+  console.log(car)
   return (
-    <div className="card">
-      <div className="card__body">
-        <img src={car.img} class="card__image" />
-        <h2 className="card__title">{car.title}</h2>
-        <p className="card__description">{props.description}</p>
-      </div>
-      <button className="card__btn">View Recipe</button>
-    </div>
+   
+      <Card.Image
+                src={carImage}
+                objectFit="cover"
+                width="60%"
+                height={140}
+                alt={"https://firebasestorage.googleapis.com/v0/b/terminal00.appspot.com/o/cars%2Fimages%20(2).png?alt=media&token=ee40db8e-ca88-4a23-85dc-55676a59120d"}
+              />
+   
   );
 }
 
