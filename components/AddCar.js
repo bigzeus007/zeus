@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   collection,
 } from "firebase/firestore";
+import { Button, Grid, Radio } from "@nextui-org/react";
 import { TakePitureButton } from "../styles/TakePitureButton.styled";
 import NewButtonColored from "../styles/NewButtonColored.styled";
 import { MiseEnCirculation, CarInfos } from "../styles/ChooseRdvStatus.style";
@@ -30,6 +31,7 @@ export default function TakePicture() {
   const [ass, setAss] = useState("");
   const [service, setService] = useState("");
   const userName = auth.currentUser.displayName;
+  const[carburant,setCarburant]=useState(0)
 
   const submitMyCarPhot = (photo, photoId) => {
     const storageRef = ref(storage, `cars/${photoId}`);
@@ -46,29 +48,26 @@ export default function TakePicture() {
       },
     };
 
-// Request permission from the user
-   navigator.permissions.query({ name: "camera" }).then((result) => {
-  if (result.state === "granted") {
-    // Check if the user has granted permission
+    // Request permission from the user
+    navigator.permissions.query({ name: "camera" }).then((result) => {
+      if (result.state === "granted") {
+        // Check if the user has granted permission
 
+        navigator.mediaDevices
+          .getUserMedia(constraints)
+          .then((stream) => {
+            var video = videoRef.current;
 
+            video.srcObject = stream;
 
-
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then((stream) => {
-        var video = videoRef.current;
-
-        video.srcObject = stream;
-
-        video.play();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    }
-  });
-};
+            video.play();
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
+    });
+  };
 
   const emptyInput = () => {
     let myInput = inputRef.current;
@@ -126,19 +125,23 @@ export default function TakePicture() {
   const [carStatus, setCarStatus] = useState("none");
   const takePictureSwitch = hasPhoto ? "flex" : "none";
 
- const carsCollectionRef = collection(db, "cars");
+  const carsCollectionRef = collection(db, "cars");
   const handleSubmit = async (image) => {
     const docRef = await addDoc(carsCollectionRef, {
       createdAt: serverTimestamp(),
 
       marque: marque,
+      service: service,
+      model: model,
       vin: vin,
       km: km,
       ass: ass,
       mec: mec,
+      availability:"Libre",
+      carburant:carburant,
       carStory: [
         {
-          creator: userName ,
+          creator: userName,
           when: new Date().toISOString().substring(0, 16),
         },
       ],
@@ -153,6 +156,8 @@ export default function TakePicture() {
     );
   };
 
+  const toggleButtonColor = () => (service == "SAV" ? "error" : "secondary");
+
   return laboZone ? (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <CarInfos pictureTooked={takePictureSwitch}>
@@ -163,14 +168,58 @@ export default function TakePicture() {
           ref={photoRef}
         />
         <div>
-          <div className="marque">
+          {/* <Grid>
+            <Button.Group color="gradient" ghost>
+              <Button onPress={(e) => setMarque("AUDI")}>AUDI</Button>
+              <Button onPress={(e) => setMarque("SKODA")}>SKODA</Button>
+            </Button.Group>
+          </Grid> */}
+          <Radio.Group label="Marque" onChange={(e)=>setMarque(e)} defaultValue="1">
+            <Radio
+              value="AUDI"
+           
+              isSquared
+            >
+              AUDI
+            </Radio>
+            <Radio value="SKODA"  isSquared>
+              SKODA
+            </Radio>
+          </Radio.Group>
+          
+          <Radio.Group label="Service" onChange={(e) => setService(e)} defaultValue="1">
+            <Radio
+              value="Commercial"
+              
+              isSquared
+            >
+              Commercial
+            </Radio>
+            <Radio value="SAV"  isSquared>
+              SAV
+            </Radio>
+          </Radio.Group>
+
+          {/* <Grid>
+            <Button.Group >
+              <Button flat onPress={(e) => setService("SAV")} color={toggleButtonColor()}>SAV</Button>
+              <Button onPress={(e) => setService("Sales")} color={service=="Commercial" ? "error":"success"}>Sales</Button>
+            </Button.Group>
+          </Grid> */}
+          {/* <div className="marque">
             <button className="audi" onClick={(e) => setMarque("AUDI")}>
               AUDI
             </button>
             <button className="skoda" onClick={(e) => setMarque("SKODA")}>
               SKODA
             </button>
-          </div>
+            <button className="audi" onClick={(e) => setService("SAV")}>
+              SAV
+            </button>
+            <button className="skoda" onClick={(e) => setService("COMMERCIAL")}>
+              Commercial
+            </button>
+          </div> */}
           <input
             className="model"
             ref={inputRef}
@@ -210,6 +259,13 @@ export default function TakePicture() {
             type="text"
             onChange={(e) => setVin(e.target.value)}
             placeholder="Numero de chassis"
+          ></input>
+          <input
+            className="carburant"
+            ref={inputRef}
+            type="number"
+            onChange={(e) => setCarburant(e.target.value)}
+            placeholder="carburant %"
           ></input>
 
           <NewButtonColored>
