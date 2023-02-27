@@ -40,9 +40,6 @@ export default function Retour({car,setEditMode}) {
 
   };
 
-
-  
-
   return (
     <>
       <Grid.Container gap={2} justify="flex-start">

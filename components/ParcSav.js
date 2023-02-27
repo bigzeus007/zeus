@@ -107,6 +107,7 @@ export default function ParcSav() {
               </Row>
             </Card.Footer>
             {item.availability == "Libre" && (
+              <Grid.Container justify="center">
               <Button.Group color="gradient" ghost>
                 <Button
                   onPress={() => {
@@ -125,8 +126,10 @@ export default function ParcSav() {
                   En arret
                 </Button>
               </Button.Group>
+              </Grid.Container>
             )}
             {(item.availability == "Prete" ) && (
+              
               <Button
                 onPress={() => {
                   setCarSelected(item);
@@ -155,6 +158,7 @@ export default function ParcSav() {
       <CarCard props={carSlected} />
 
       {editMode == "Livrer" && (
+        
         <Livrer car={carSlected} setEditMode={setEditMode}></Livrer>
       )}
       {editMode == "Arret" && (
