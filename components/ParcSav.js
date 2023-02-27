@@ -10,11 +10,10 @@ import {
   Col,
   Text,
   Button,
-  Progress,
-  Input,
+
 } from "@nextui-org/react";
 import CarCard from "./CarCard";
-import Reserver from "./Reserver";
+
 import Livrer from "./Livrer";
 import Immobiliser from "./Immobiliser";
 import Retour from "./Retour";
@@ -129,7 +128,7 @@ export default function ParcSav() {
               </Grid.Container>
             )}
             {(item.availability == "Prete" ) && (
-              
+
               <Button
                 onPress={() => {
                   setCarSelected(item);
@@ -158,7 +157,6 @@ export default function ParcSav() {
       <CarCard props={carSlected} />
 
       {editMode == "Livrer" && (
-        
         <Livrer car={carSlected} setEditMode={setEditMode}></Livrer>
       )}
       {editMode == "Arret" && (
@@ -168,14 +166,7 @@ export default function ParcSav() {
         <Retour car={carSlected} setEditMode={setEditMode}></Retour>
       )}
 
-      {/* <Grid>
-      <Button.Group color="gradient" ghost>
-        <Button>Entree</Button>
-        <Button>Sortie</Button>
-        <Button>Reservation</Button>
-        <Button>Immobilisation</Button>
-      </Button.Group>
-      </Grid> */}
+
     </Grid.Container>
   );
 }

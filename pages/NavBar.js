@@ -16,19 +16,20 @@ import TakePicture from "@/components/AddCar";
 import ParcSav from "@/components/ParcSav";
 
 export default function NavBar() {
-  const adressEmail= auth.currentUser.email?auth.currentUser.email:"";
-  const actualUser = query(
-    collection(db, "users"),
-    where("email", "==", `${adressEmail}`)
-  );
-  const [user, setUser] = useState({ nom: "" });
-  useEffect(() => {
-    const fetchData = async () => {
-      const userData = await getDocs(actualUser);
-      userData.forEach((inUser) => setUser(inUser.data()));
-    };
-    fetchData();
-  }, []);
+  // const actualUser = auth.currentUser
+  //   ? query(
+  //       collection(db, "users"),
+  //       where("email", "==", `${auth.currentUser.email}`)
+  //     )
+  //   : false;
+  // const [user, setUser] = useState({});
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const userData = await getDocs(actualUser);
+  //     userData.forEach((inUser) => setUser(inUser.data()));
+  //   };
+  //   fetchData();
+  // }, []);
 
   const photoProfil = auth.currentUser.photoURL
     ? auth.currentUser.photoURL
@@ -69,11 +70,9 @@ export default function NavBar() {
 
           <div className="menu-bar">
             <div className="menu">
-              
-
-              <ul className="menu-links" >
+              <ul className="menu-links">
                 <li className="nav-link" onClick={() => setRubrique("Parc")}>
-                  <a href="#" >
+                  <a href="#">
                     <i className="bx bx-image-add icon"></i>
                     <span className="text nav-text">Ajouter</span>
                   </a>
@@ -170,7 +169,7 @@ export default function NavBar() {
                 right: "0px",
               }}
             >
-              <p style={{ fontSize: "3vw" }}>Bonjour : {user.nom}</p>
+              <p style={{ fontSize: "3vw" }}>Bonjour : {auth.currentUser.displayName}</p>
 
               <Image
                 width={50}
@@ -182,7 +181,6 @@ export default function NavBar() {
           </div>
           {rubrique == "Parc" && <TakePicture />}
           {rubrique == "ParcSav" && <ParcSav />}
-
         </section>
       </div>
     </>
