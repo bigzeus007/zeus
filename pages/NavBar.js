@@ -16,9 +16,10 @@ import TakePicture from "@/components/AddCar";
 import ParcSav from "@/components/ParcSav";
 
 export default function NavBar() {
+  const adressEmail= auth.currentUser.email?auth.currentUser.email:"";
   const actualUser = query(
     collection(db, "users"),
-    where("email", "==", `${auth.currentUser.email}`)
+    where("email", "==", `${adressEmail}`)
   );
   const [user, setUser] = useState({ nom: "" });
   useEffect(() => {
