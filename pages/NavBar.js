@@ -16,24 +16,11 @@ import TakePicture from "@/components/AddCar";
 import ParcSav from "@/components/ParcSav";
 
 export default function NavBar() {
-  // const actualUser = auth.currentUser
-  //   ? query(
-  //       collection(db, "users"),
-  //       where("email", "==", `${auth.currentUser.email}`)
-  //     )
-  //   : false;
-  // const [user, setUser] = useState({});
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const userData = await getDocs(actualUser);
-  //     userData.forEach((inUser) => setUser(inUser.data()));
-  //   };
-  //   fetchData();
-  // }, []);
 
-  const photoProfil = auth.currentUser.photoURL
+
+  const photoProfil = auth.currentUser && auth.currentUser.photoURL
     ? auth.currentUser.photoURL
-    : false;
+    : "https://firebasestorage.googleapis.com/v0/b/terminal00.appspot.com/o/cars%2Fanonymous.png?alt=media&token=1bd43fc7-0820-445a-a4bf-33bf481a6c74";
 
   const [toggle, setToggle] = useState("close");
   const [rubrique, setRubrique] = useState(null);
@@ -169,7 +156,9 @@ export default function NavBar() {
                 right: "0px",
               }}
             >
-              <p style={{ fontSize: "3vw" }}>Bonjour : {auth.currentUser.displayName}</p>
+              <p style={{ fontSize: "3vw" }}>
+                {/* Bonjour : {auth.currentUser.displayName} */}
+              </p>
 
               <Image
                 width={50}
