@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import TakePicture from "@/components/AddCar";
 import ParcSav from "@/components/ParcSav";
+import Camera from "@/components/ChatGpt";
 
 export default function NavBar() {
 
@@ -168,6 +169,7 @@ export default function NavBar() {
               ></Image>
             </div>
           </div>
+          <Camera></Camera>
           {rubrique == "Parc" && <TakePicture />}
           {rubrique == "ParcSav" && <ParcSav />}
         </section>
