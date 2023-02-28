@@ -20,6 +20,7 @@ export default function TakePicture() {
   const [hasPhoto, setHasPhoto] = useState(false);
   const [laboZone, setLaboZone] = useState(false);
   const [image, setImage] = useState(null);
+  const [playingVideo,setPlayingVideo]=useState(false)
 
   const inputRef = useRef(null);
 
@@ -40,7 +41,7 @@ export default function TakePicture() {
     });
   };
 
-  const getVideo = () => {
+  const getVideo = async() => {
     const constraints = {
       audio: false,
       video: {
@@ -48,25 +49,20 @@ export default function TakePicture() {
       },
     };
 
-    // Request permission from the user
-    navigator.permissions.query({ name: "camera" }).then((result) => {
-      if (result.state === "granted") {
-        // Check if the user has granted permission
+  
+    if (videoRef.current && !videoRef.current.srcObject) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const video = videoRef.current;
 
-        navigator.mediaDevices
-          .getUserMedia(constraints)
-          .then((stream) => {
-            var video = videoRef.current;
-
-            video.srcObject = stream;
-
-            video.play();
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+        video.srcObject = stream;
+        video.play();
+        setPlayingVideo(true);
+      } catch (err) {
+        console.error(err);
       }
-    });
+    }
+     
   };
 
   const emptyInput = () => {
@@ -76,19 +72,24 @@ export default function TakePicture() {
 
   // STOP CAMERA
 
-  const stopStreamedVideo = (videoElem) => {
-    const stream = videoElem.srcObject;
-    const tracks = stream.getTracks();
+  const stopStreamedVideo = (video) => {
 
-    tracks.forEach(function (track) {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = video.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach((track) => {
       track.stop();
     });
-
-    videoElem.srcObject = null;
+    setPlayingVideo(false);
+      
+    }
+    
+    
   };
 
   const takePhoto = () => {
-    const width = 250;
+    if (photoRef.current && playingVideo) {
+      const width = 250;
     const height = 480;
     let photo = photoRef.current;
     let video = videoRef.current;
@@ -105,6 +106,9 @@ export default function TakePicture() {
     emptyInput();
     setHasPhoto(true);
     stopStreamedVideo(video);
+      
+    }
+    
   };
 
   const closePhoto = () => {
@@ -294,7 +298,7 @@ export default function TakePicture() {
 
       <div id="laboZone" style={{ display: "flex", borderRadius: "20%" }}>
         <div
-          onClick={takePhoto}
+          onClick={()=>takePhoto()}
           style={{
             position: "relative",
             padding: "10% 10% 20% 15%",

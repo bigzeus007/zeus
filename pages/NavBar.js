@@ -169,7 +169,7 @@ export default function NavBar() {
               ></Image>
             </div>
           </div>
-          <Camera></Camera>
+          {/* <Camera></Camera> */}
           {rubrique == "Parc" && <TakePicture />}
           {rubrique == "ParcSav" && <ParcSav />}
         </section>
