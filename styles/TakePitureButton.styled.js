@@ -85,7 +85,7 @@ content: '';
       font-size: 3.5vw;
       }
     }
-  }
+  
 
 
 

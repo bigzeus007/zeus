@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 export const CarInfos = styled.div`
   display: ${(props) => props.pictureTooked};
-  flex-direction: row;
-  position: absolute;
+  /* flex-direction: row;
+  position: relative; */
 
-  top: 5vw;
+  /* top: 5vw;
   left: 2vw;
   justify-content: space-between;
   canvas {
@@ -55,22 +55,22 @@ export const CarInfos = styled.div`
       left: 0vw;
       top: 5vh;
       width: 100px;
-    }
-  }
+    } 
+  }*/
 `;
 
 export const MiseEnCirculation = styled.div`
   display: ${(props) => (props.rdvState == false ? "none" : "flex")};
-  flex-direction: column;
+  /* flex-direction: column; */
   /* display:${(props) => (props.rdvSate == "--:-- --" ? "none" : "flex")}; */
 `;
 
 export const ChooseRdvStatus = styled.div``;
 
 export const RdvInfo = styled.div`
-  position: absolute;
+  /* position: absolute;
 
   top: 15vh;
   left: 10vw;
-  font-size: 1.7vw;
+  font-size: 1.7vw; */
 `;

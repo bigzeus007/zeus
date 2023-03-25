@@ -3,23 +3,23 @@ import styled from "styled-components";
 const NewButtonColored = styled.div`
 
 * {
-  margin: 0;
-  padding: 0;
+ 
+ 
   font-size:17px;
   
 }
 
 
 .subscribe {
-  position: absolute;
+  position: relative;
   display:flex;
-  left: 40vw;
-  bottom: -30vh;
+  left: 42vw;
+  
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  width: 80vw;
+  width: 70vw;
   
 }
 
@@ -38,8 +38,8 @@ ul {
 input[type="submit"]{
   display: block;
   margin: 0 auto;
-  width: 50%;
-  height: 50px;
+  width: 40%;
+  
   font-family: Helvetica;
   border-bottom: 5px solid steelblue;
   border-top: none;
@@ -121,7 +121,7 @@ input[type="submit"]:active{
 
 
 
-}
+
 
 `
 
