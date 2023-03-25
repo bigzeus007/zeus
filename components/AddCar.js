@@ -9,7 +9,7 @@ import {
   serverTimestamp,
   collection,
 } from "firebase/firestore";
-import { Button, Grid, Radio } from "@nextui-org/react";
+import { Button, Card, Container, Grid, Input, Radio } from "@nextui-org/react";
 import { TakePitureButton } from "../styles/TakePitureButton.styled";
 import NewButtonColored from "../styles/NewButtonColored.styled";
 import { MiseEnCirculation, CarInfos } from "../styles/ChooseRdvStatus.style";
@@ -163,30 +163,30 @@ export default function TakePicture() {
   const toggleButtonColor = () => (service == "SAV" ? "error" : "secondary");
 
   return laboZone ? (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <CarInfos pictureTooked={takePictureSwitch}>
+    <Grid.Container css={{position:"relative",}}>
+      
+      <Card css={{display: `${hasPhoto ? "flex" : "none"}`,}} >
+        <Card.Header>
         <canvas
           style={{
             display: `${takePictureSwitch}`,
+            // margin: "auto",
+            width:"20vw",
+            height:"20vh",
           }}
           ref={photoRef}
         />
-        <div>
-          {/* <Grid>
-            <Button.Group color="gradient" ghost>
-              <Button onPress={(e) => setMarque("AUDI")}>AUDI</Button>
-              <Button onPress={(e) => setMarque("SKODA")}>SKODA</Button>
-            </Button.Group>
-          </Grid> */}
+       
+       <Grid.Container >
           <Radio.Group label="Marque" onChange={(e)=>setMarque(e)} defaultValue="1">
-            <Radio
+            <Radio size="sm"
               value="AUDI"
            
               isSquared
             >
               AUDI
             </Radio>
-            <Radio value="SKODA"  isSquared>
+            <Radio value="SKODA"  size="sm" isSquared>
               SKODA
             </Radio>
           </Radio.Group>
@@ -194,95 +194,81 @@ export default function TakePicture() {
           <Radio.Group label="Service" onChange={(e) => setService(e)} defaultValue="1">
             <Radio
               value="Commercial"
-              
+              size="sm"
               isSquared
             >
               Commercial
             </Radio>
-            <Radio value="SAV"  isSquared>
+            <Radio value="SAV" size="sm" isSquared>
               SAV
             </Radio>
           </Radio.Group>
+          </Grid.Container>
+          </Card.Header>
 
-          {/* <Grid>
-            <Button.Group >
-              <Button flat onPress={(e) => setService("SAV")} color={toggleButtonColor()}>SAV</Button>
-              <Button onPress={(e) => setService("Sales")} color={service=="Commercial" ? "error":"success"}>Sales</Button>
-            </Button.Group>
-          </Grid> */}
-          {/* <div className="marque">
-            <button className="audi" onClick={(e) => setMarque("AUDI")}>
-              AUDI
-            </button>
-            <button className="skoda" onClick={(e) => setMarque("SKODA")}>
-              SKODA
-            </button>
-            <button className="audi" onClick={(e) => setService("SAV")}>
-              SAV
-            </button>
-            <button className="skoda" onClick={(e) => setService("COMMERCIAL")}>
-              Commercial
-            </button>
-          </div> */}
-          <input
-            className="model"
+          <Card.Body>
+
+          <Input
+            
             ref={inputRef}
             type="text"
             onChange={(e) => setModel(e.target.value)}
             placeholder="Model"
-          ></input>
+          ></Input>
 
-          <MiseEnCirculation>
-            <div>Date NMise en circulation</div>
-            <input
-              className="mec"
+          
+            
+            <Input label="Date Mise en circulation"
+              
               type="date"
               onChange={(e) => setMec(e.target.value)}
-            ></input>
+            ></Input>
             <br />
-          </MiseEnCirculation>
-          <MiseEnCirculation>
-            <div>Date fin assurance</div>
-            <input
-              className="mec"
+         
+          
+           
+            <Input
+            label="Date fin assurance"
               type="date"
               onChange={(e) => setAss(e.target.value)}
-            ></input>
+            ></Input>
             <br />
-          </MiseEnCirculation>
-          <input
+          
+          <Input
             className="model"
             ref={inputRef}
             type="text"
             onChange={(e) => setKm(e.target.value)}
             placeholder="Km Actuel"
-          ></input>
-          <input
+          ></Input>
+          <Input
             className="vin"
             ref={inputRef}
             type="text"
             onChange={(e) => setVin(e.target.value)}
             placeholder="Numero de chassis"
-          ></input>
-          <input
+          ></Input>
+          <Input
             className="carburant"
             ref={inputRef}
             type="number"
             onChange={(e) => setCarburant(e.target.value)}
             placeholder="carburant %"
-          ></input>
-
-          <NewButtonColored>
-            <div className="subscribe">
-              <a
-                href="#"
-                onClick={() => {
+          ></Input>
+          </Card.Body>
+          <Card.Footer >
+            <Button color="primary" onPress={() => {
                   closePhoto();
-                }}
-                className="btn-3d-can"
-              >
-                <span>cancel</span>
-              </a>
+                }} >cancel</Button>
+
+<Button color="success" onPress={() => {
+                  closePhoto();
+                }} >cancel</Button>
+
+
+          <NewButtonColored >
+            <div className="subscribe">
+             
               <a
                 href="#"
                 onClick={() => handleSubmit(image)}
@@ -293,10 +279,10 @@ export default function TakePicture() {
               <br />
             </div>
           </NewButtonColored>
-        </div>
-      </CarInfos>
+          </Card.Footer>
+      </Card>
 
-      <div id="laboZone" style={{ display: "flex", borderRadius: "20%" }}>
+      <div id="laboZone" style={{ display: "flex", borderRadius: "20%",display: `${hasPhoto ? "none" : "flex"}`, }}>
         <div
           onClick={()=>takePhoto()}
           style={{
@@ -304,7 +290,7 @@ export default function TakePicture() {
             padding: "10% 10% 20% 15%",
             height: "80vh",
             width: "70vw",
-            display: `${hasPhoto ? "none" : "flex"}`,
+            
           }}
         >
           <video
@@ -318,14 +304,16 @@ export default function TakePicture() {
           />
         </div>
       </div>
-    </div>
+    </Grid.Container>
   ) : (
-    <div
-      onClick={() => {
+    <Grid.Container  css={{position:"relative",justifyContent:"center",top:"40%"}}>
+    <Button auto rounded size={"xl"}
+      onPress={() => {
         setLaboZone(true), getVideo();
       }}
-    >
-      <TakePitureButton props={"Demarrer"} />
-    </div>
+    > Prendre photo
+      {/* <TakePitureButton props={"Demarrer"} /> */}
+    </Button>
+    </Grid.Container>
   );
 }
