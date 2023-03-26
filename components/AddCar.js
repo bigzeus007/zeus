@@ -9,7 +9,7 @@ import {
   serverTimestamp,
   collection,
 } from "firebase/firestore";
-import { Button, Card, Container, Grid, Input, Radio } from "@nextui-org/react";
+import { Button, Card, Container, Grid, Input, Radio,Loading } from "@nextui-org/react";
 import { TakePitureButton } from "../styles/TakePitureButton.styled";
 import NewButtonColored from "../styles/NewButtonColored.styled";
 import { MiseEnCirculation, CarInfos } from "../styles/ChooseRdvStatus.style";
@@ -23,6 +23,8 @@ export default function TakePicture() {
   const [playingVideo,setPlayingVideo]=useState(false)
 
   const inputRef = useRef(null);
+
+  const [loading, setLoading]=useState(0)
 
   const [vin, setVin] = useState("");
   const [marque, setMarque] = useState("");
@@ -119,6 +121,7 @@ export default function TakePicture() {
 
     setHasPhoto(false);
     setLaboZone(false);
+    setLoading(0);
   };
   useEffect(() => {
     if (laboZone) {
@@ -151,6 +154,7 @@ export default function TakePicture() {
       ],
     });
     await submitMyCarPhot(image, docRef.id);
+    
     await setDoc(
       doc(db, "cars", docRef.id),
       {
@@ -158,6 +162,7 @@ export default function TakePicture() {
       },
       { merge: true }
     );
+   
   };
 
   const toggleButtonColor = () => (service == "SAV" ? "error" : "secondary");
@@ -261,12 +266,10 @@ export default function TakePicture() {
                   closePhoto();
                 }} >cancel</Button>
 
-<Button color="success" onPress={() => {
-                  closePhoto();
-                }} >cancel</Button>
+<Button color="success" onPress={() => {setLoading(1);handleSubmit(image);}} >{loading==0? "Save" : <Loading size="xs" />}</Button>
 
 
-          <NewButtonColored >
+          {/* <NewButtonColored >
             <div className="subscribe">
              
               <a
@@ -278,7 +281,7 @@ export default function TakePicture() {
               </a>
               <br />
             </div>
-          </NewButtonColored>
+          </NewButtonColored> */}
           </Card.Footer>
       </Card>
 
