@@ -17,6 +17,7 @@ import CarCard from "./CarCard";
 import Livrer from "./Livrer";
 import Immobiliser from "./Immobiliser";
 import Retour from "./Retour";
+import EditCar from "./EditCar";
 
 export default function ParcSav() {
   const [editMode, setEditMode] = useState(0);
@@ -81,7 +82,7 @@ export default function ParcSav() {
                   }}
                   b
                 >
-                  {item.availability}
+                  {item.availability?"Libre":"Réservé"}
                 </Text>
                 <Text
                   css={{
@@ -105,7 +106,7 @@ export default function ParcSav() {
                 <Text b>{item.km + "km"}</Text>
               </Row>
             </Card.Footer>
-            {item.availability == "Libre" && (
+            {item.availability && (
               <Grid.Container justify="center">
               <Button.Group color="gradient" ghost>
                 <Button
@@ -114,20 +115,15 @@ export default function ParcSav() {
                     setEditMode("Livrer");
                   }}
                 >
-                  Livrer/R
+                  Réservation 
                 </Button>
-                <Button
-                  onPress={() => {
-                    setCarSelected(item);
-                    setEditMode("Arret");
-                  }}
-                >
-                  En arret
-                </Button>
+                
               </Button.Group>
               </Grid.Container>
             )}
-            {(item.availability == "Prete" ) && (
+            {(item.availability == false ) && (
+              <Grid.Container justify="center">
+              <Button.Group color="gradient" ghost>
 
               <Button
                 onPress={() => {
@@ -135,28 +131,30 @@ export default function ParcSav() {
                   setEditMode("Retour");
                 }}
               >
-                Receptionner
+                Retour
               </Button>
+              </Button.Group>
+              </Grid.Container>
+
+
             )}
-             {(item.availability == "Arret" ) && (
-              <Button
-                onPress={() => {
-                  setCarSelected(item);
-                  setEditMode("Retour");
-                }}
-              >
-                Receptionner
-              </Button>
-            )}
+            
           </Card>
         </Grid>
       ))}
     </Grid.Container>
   ) : (
     <Grid.Container justify="center">
-      <CarCard props={carSlected} />
+      <EditCar car={carSlected} setEditMode={setEditMode}></EditCar>
 
-      {editMode == "Livrer" && (
+{/* <Card>
+        <Card.Header>
+        <CarCard props={carSlected} />
+
+        </Card.Header>
+        <Card.Body>
+
+        {editMode == "Livrer" && (
         <Livrer car={carSlected} setEditMode={setEditMode}></Livrer>
       )}
       {editMode == "Arret" && (
@@ -165,6 +163,23 @@ export default function ParcSav() {
       {editMode == "Retour" && (
         <Retour car={carSlected} setEditMode={setEditMode}></Retour>
       )}
+
+
+        </Card.Body>
+        <Card.Footer >
+
+          
+        </Card.Footer>
+        </Card> */}
+
+
+
+
+
+
+     
+
+      
 
 
     </Grid.Container>

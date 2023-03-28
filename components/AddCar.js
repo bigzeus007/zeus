@@ -144,7 +144,7 @@ export default function TakePicture() {
       km: km,
       ass: ass,
       mec: mec,
-      availability:"Libre",
+      availability:true,
       carburant:carburant,
       carStory: [
         {

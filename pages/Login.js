@@ -12,6 +12,7 @@ const provider = new GoogleAuthProvider();
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+ 
 
   const handleGoogleSignIn = async () => {
     try {
@@ -20,6 +21,7 @@ const Login = () => {
     } catch (error) {
       setError(error.message);
     } finally {
+     
       setLoading(false);
     }
   };
@@ -36,7 +38,7 @@ const Login = () => {
       setLoading(false);
     }
   };
-  return (
+  return !loading?(
     <div id="login-page" className={styles["login-page"]}>
       <div id="login-card" className={styles["login-card"]}>
         <h2>Welcome to One Touch</h2>
@@ -60,7 +62,7 @@ const Login = () => {
         {loading && <p className={styles.loading}>Loading...</p>}
       </div>
     </div>
-  );
+  ):(null);
 };
 
 export default Login;
