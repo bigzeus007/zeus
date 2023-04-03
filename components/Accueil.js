@@ -3,7 +3,7 @@ import SignOut from "./SignOut";
 
 
 
-export default function Accueil() {
+export default function Accueil() {   
  
   return (
     <>

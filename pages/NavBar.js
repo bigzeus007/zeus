@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import TakePicture from "@/components/AddCar";
 import ParcSav from "@/components/ParcSav";
+import CustomerParking from "@/components/CustomerParking";
 import Camera from "@/components/ChatGpt";
 
 export default function NavBar() {
@@ -71,10 +72,10 @@ export default function NavBar() {
                   <span className="text nav-text">Courtoisie</span>
                 </li>
 
-                <li className="nav-link">
+                <li className="nav-link" onClick={() => setRubrique("ParkingCustomer")} >
                   <a href="#">
                     <i className="bx bxs-car-garage icon"></i>
-                    <span className="text nav-text">Notifications</span>
+                    <span className="text nav-text">Parking Clients</span>
                   </a>
                 </li>
 
@@ -172,6 +173,7 @@ export default function NavBar() {
           {/* <Camera></Camera> */}
           {rubrique == "Parc" && <TakePicture />}
           {rubrique == "ParcSav" && <ParcSav />}
+          {rubrique == "ParkingCustomer" && <CustomerParking />}
         </section>
       </div>
     </>
