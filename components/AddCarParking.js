@@ -265,8 +265,10 @@ export default function AddCarParking({
             </Grid.Container>
           )}
         </Card.Body>
-        <Card.Footer>
+        <Card.Footer >
+        <Grid.Container wrap="wrap">
           <Button
+          css={{width:"40vw"}}
             color="primary"
             onPress={() => {
               closePhoto();
@@ -274,9 +276,11 @@ export default function AddCarParking({
           >
             cancel
           </Button>
+          <Spacer y={2} x={2}></Spacer>
 
           {csSelected && (
             <Button
+            css={{width:"40vw"}}
               color="success"
               onPress={() => {
                 setLoading(1);
@@ -286,6 +290,7 @@ export default function AddCarParking({
               {loading == 0 ? "Save" : <Loading size="xs" />}
             </Button>
           )}
+          </Grid.Container>
         </Card.Footer>
       </Card>
 
