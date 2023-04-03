@@ -22,7 +22,7 @@ export default function CarCard(car) {
         return "white";
     }
   };
-  console.log(availabilityColor())
+  
 
   const [carImage, setCarImage] = useState("");
 
@@ -33,7 +33,7 @@ export default function CarCard(car) {
       .then((url) => setCarImage(url))
       .catch((err) => console.log(err));
   }, []);
-  console.log(car);
+  
   return (
     <Image
       src={carImage}
