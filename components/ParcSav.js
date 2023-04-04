@@ -53,7 +53,7 @@ export default function ParcSav() {
       });
   }, []);
 
-  // cars? console.log(cars[0].id):{} ;
+
 
   return editMode == 0 ? (
     <Grid.Container gap={1} justify="flex-start">
