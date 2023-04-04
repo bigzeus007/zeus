@@ -97,7 +97,7 @@ const CustomerParking = () => {
     const myContent = findCar(num);
 
     return (
-      <Row span={1} css={{height:"70%"}}>
+      <Row span={1} css={{height:"80%"}}>
         <Card
           
           isPressable
@@ -111,14 +111,14 @@ const CustomerParking = () => {
               alt={`Image of car in place ${myContent.place}`}
               objectFit="fill"
             />
-             <Text color="white" size={"3vw"} css={{ position: "absolute", left: "10%" }}>
+             <Text color="white" size={"3vw"} css={{ position: "absolute", left: "75%" }}>
             {num}
           </Text>
           {myContent.csSelected && (
             <Text
             color="white"
               size={"2vw"}
-              css={{ position: "absolute", bottom: "0%", border: "$border" }}
+              css={{ position: "absolute", bottom: "10%", border: "$border" }}
             >
               {myContent.csSelected}
             </Text>)}
