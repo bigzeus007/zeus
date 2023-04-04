@@ -11,9 +11,9 @@ import {
   Col,
   Button,
 } from "@nextui-org/react";
-import "firebase/firestore";
+import 'firebase/firestore';
 import { db, storage } from "../firebase";
-import { collection, getDocs, onSnapshot, orderBy } from "firebase/firestore";
+import { collection, getDocs, orderBy, onSnapshot } from "firebase/firestore";
 import AddCarParking from "./AddCarParking";
 
 const CustomerParking = () => {
@@ -36,26 +36,24 @@ const CustomerParking = () => {
   };
   const parkingAa = [1, 2, 3, 4, 5];
   const parkingAb = [6, 7, 8, 9, 10];
-  const parkingBa = [11, 12, 13, 14, 15];
-  const parkingBb = [16, 17, 18, 19, 20];
-  const parkingC = [21, 22, 23, 24, 25];
+  const parkingBa = [11, 12, 13, 14];
+  const parkingBb = [15, 16, 17, 18];
+  const parkingC = [19, 20,21, 22, 23, 24, 25];
 
   const parcListRef = collection(db, "parkingCustomer");
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    getDocs(parcListRef)
-      .then((querySnapshot) => {
-        const carsData = [];
-        querySnapshot.forEach((doc) => {
-          carsData.push(doc.data());
-        });
-        setCars(carsData);
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
+    const unsubscribe = onSnapshot(parcListRef, (querySnapshot) => {
+      const carsData = [];
+      querySnapshot.forEach((doc) => {
+        carsData.push(doc.data());
       });
-  }, [editMode]);
+      setCars(carsData);
+    });
+    
+    return unsubscribe; // cleanup function
+  }, []);
 
   function findCar(num) {
     return cars.find((car) => car.place === num) || emptyPlace;
@@ -84,7 +82,7 @@ const CustomerParking = () => {
           {myContent.csSelected && (
             <Text
             color="white"
-              size={"1vw"}
+              size={"2vw"}
               css={{ position: "absolute", bottom: "0%", border: "$border" }}
             >
               {myContent.csSelected}
@@ -99,7 +97,7 @@ const CustomerParking = () => {
     const myContent = findCar(num);
 
     return (
-      <Row span={1} >
+      <Row span={1} css={{height:"70%"}}>
         <Card
           
           isPressable
@@ -119,7 +117,7 @@ const CustomerParking = () => {
           {myContent.csSelected && (
             <Text
             color="white"
-              size={"1vw"}
+              size={"2vw"}
               css={{ position: "absolute", bottom: "0%", border: "$border" }}
             >
               {myContent.csSelected}
@@ -159,7 +157,7 @@ const CustomerParking = () => {
         gap={0}
         css={{
           position: "absolute",
-          top: "20%",
+          top: "13%",
           right: "0%",
           height: "100px",
           width: "15%",

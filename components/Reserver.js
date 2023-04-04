@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 export default function Reserver({car,setEditMode}) {
   const carToEdit = car;
-  console.log(carToEdit);
+
   
   const [diesel, setDiesel] = useState(0);
   
