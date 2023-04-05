@@ -10,6 +10,8 @@ import {
   Row,
   Col,
   Button,
+  Badge,
+  Avatar,
 } from "@nextui-org/react";
 import 'firebase/firestore';
 import { db, storage } from "../firebase";
@@ -22,6 +24,7 @@ const CustomerParking = () => {
   const emptyPlace = {
     place: 0,
     placeStatus: false,
+    csSelected:"",
     cs: "",
     note: "",
     date: "",
@@ -42,14 +45,33 @@ const CustomerParking = () => {
 
   const parcListRef = collection(db, "parkingCustomer");
   const [cars, setCars] = useState([]);
+  const [aziz,setAziz]=useState(0);
+  const [badr,setBadr]=useState(0);
+  const [abdelali,setAbdelali]=useState(0);
+  const [mohammed,setMohammed]=useState(0);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(parcListRef, (querySnapshot) => {
       const carsData = [];
+      let azizC=0;
+      let badrC=0;
+      let abdelaliC=0;
+      let mohammedC=0;
+
       querySnapshot.forEach((doc) => {
+        doc.data().csSelected=="BADR"&&badrC++;
+        doc.data().csSelected=="AZIZ"&&azizC++;
+        doc.data().csSelected=="ABDELALI"&&abdelaliC++;
+        doc.data().csSelected=="MOHAMMED"&&mohammedC++;
         carsData.push(doc.data());
       });
       setCars(carsData);
+      setAziz(azizC);
+      setBadr(badrC);
+      setAbdelali(abdelaliC);
+      setMohammed(mohammedC);
+
+
     });
     
     return unsubscribe; // cleanup function
@@ -167,6 +189,13 @@ const CustomerParking = () => {
           <PlaceContentR num={parkingNum} key={parkingNum} />
         ))}
       </Container>
+      <Grid.Container css={{width:"50vw"}} display={"flex"} gap={1}>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={aziz} ><Avatar text="Aziz" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={abdelali} ><Avatar text="Abdel" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={badr} ><Avatar text="Badr" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={mohammed} ><Avatar text="Simo" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
+        
+      </Grid.Container>
     </Container>
   ) : (
     <AddCarParking place={editMode} setEditMode={setEditMode} editModeCarStatus={editModeCarStatus}/>

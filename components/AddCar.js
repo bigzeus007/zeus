@@ -68,7 +68,7 @@ export default function TakePicture() {
         video.play();
         setPlayingVideo(true);
       } catch (err) {
-        console.error(err);
+        C.error(err);
       }
     }
   };
