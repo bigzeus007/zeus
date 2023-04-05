@@ -49,7 +49,7 @@ export default function ParcSav() {
         setCars(carsData);
       })
       .catch((error) => {
-        console.log("Error getting documents: ", error);
+        BV.log("Error getting documents: ", error);
       });
   }, []);
 
