@@ -21,6 +21,31 @@ import AddCarParking from "./AddCarParking";
 const CustomerParking = () => {
   const [editMode, setEditMode] = useState(0);
   const [editModeCarStatus, setEditModeCarStatus] = useState(false);
+
+  function csBadgeColor(key){
+    let csCovert="";
+    switch (key) {
+      case "AZIZ":
+        csCovert="black";
+        break;
+        case "ABDELALI":
+        csCovert="green";
+        break;
+        case "BADR":
+        csCovert="red";
+        break;
+        case "MOHAMMED":
+        csCovert="blue";
+        break;
+        
+      default: 
+      csCovert="gray";
+        break;
+    }
+    return csCovert;
+  } ;
+
+  
   const emptyPlace = {
     place: 0,
     placeStatus: false,
@@ -83,14 +108,22 @@ const CustomerParking = () => {
 
   const PlaceContentC = ({ num }) => {
     const myContent = findCar(num);
-
+    
     return (
       <Col span={2} css={{ height: "stretch" }}>
+        
         <Card
           css={{ height: "stretch" }}
           isPressable
           onPress={() => {setEditMode(num);setEditModeCarStatus(myContent)}}
         >
+          <Grid>
+           <Avatar 
+          text={`${num}`} 
+          color={""} 
+          textColor="white" 
+          css={{position:"absolute",backgroundColor:`${csBadgeColor(myContent.csSelected)}`}}
+          /></Grid>
           <Image
             width={320}
             height={180}
@@ -98,18 +131,12 @@ const CustomerParking = () => {
             alt={`Image of car in place ${myContent.place}`}
             objectFit="fill"
           />
+          
+         
           <Text color="white" size={"3vw"} css={{ position: "absolute", left: "10%" }}>
             {num}
           </Text>
-          {myContent.csSelected && (
-            <Text
-            color="white"
-              size={"2vw"}
-              css={{ position: "absolute", bottom: "0%", border: "$border" }}
-            >
-              {myContent.csSelected}
-            </Text>
-          )}
+          
         </Card>
       </Col>
     );
@@ -125,6 +152,13 @@ const CustomerParking = () => {
           isPressable
           onPress={(e) => {setEditMode(num);setEditModeCarStatus(myContent)}}
         >
+          <Grid>
+           <Avatar 
+          text={`${num}`} 
+          color={""} 
+          textColor="white" 
+          css={{position:"absolute",backgroundColor:`${csBadgeColor(myContent.csSelected)}`}}
+          /></Grid>
   
             <Image
               width={320}
@@ -133,17 +167,8 @@ const CustomerParking = () => {
               alt={`Image of car in place ${myContent.place}`}
               objectFit="fill"
             />
-             <Text color="white" size={"3vw"} css={{ position: "absolute", left: "75%" }}>
-            {num}
-          </Text>
-          {myContent.csSelected && (
-            <Text
-            color="white"
-              size={"2vw"}
-              css={{ position: "absolute", bottom: "10%", border: "$border" }}
-            >
-              {myContent.csSelected}
-            </Text>)}
+           
+          
             
           
         </Card>
@@ -190,10 +215,10 @@ const CustomerParking = () => {
         ))}
       </Container>
       <Grid.Container css={{width:"50vw"}} display={"flex"} gap={1}>
-        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={aziz} ><Avatar text="Aziz" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
-        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={abdelali} ><Avatar text="Abdel" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
-        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={badr} ><Avatar text="Badr" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
-        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={mohammed} ><Avatar text="Simo" color="gradient" textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={aziz} ><Avatar text="Aziz" color="" css={{backgroundColor:"Black"}} textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={abdelali} ><Avatar text="Abdel" color="" css={{backgroundColor:"green"}} textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={badr} ><Avatar text="Badr" color="" css={{backgroundColor:"red"}} textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={mohammed} ><Avatar text="Simo" color="" css={{backgroundColor:"blue"}} textColor="white" size={"lg"}/></Badge></Grid>
         
       </Grid.Container>
     </Container>
