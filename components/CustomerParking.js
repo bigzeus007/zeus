@@ -26,13 +26,13 @@ const CustomerParking = () => {
     let csCovert="";
     switch (key) {
       case "AZIZ":
-        csCovert="black";
+        csCovert="purple";
         break;
         case "ABDELALI":
         csCovert="green";
         break;
         case "BADR":
-        csCovert="red";
+        csCovert="orange";
         break;
         case "MOHAMMED":
         csCovert="blue";
@@ -211,9 +211,9 @@ const CustomerParking = () => {
         ))}
       </Container>
       <Grid.Container css={{width:"50vw"}} display={"flex"} gap={1}>
-        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={aziz} ><Avatar text="Aziz" color="" css={{backgroundColor:"Black"}} textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={aziz} ><Avatar text="Aziz" color="" css={{backgroundColor:"purple"}} textColor="white" size={"lg"}/></Badge></Grid>
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={abdelali} ><Avatar text="Abdel" color="" css={{backgroundColor:"green"}} textColor="white" size={"lg"}/></Badge></Grid>
-        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={badr} ><Avatar text="Badr" color="" css={{backgroundColor:"red"}} textColor="white" size={"lg"}/></Badge></Grid>
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={badr} ><Avatar text="Badr" color="" css={{backgroundColor:"orange"}} textColor="white" size={"lg"}/></Badge></Grid>
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={mohammed} ><Avatar text="Simo" color="" css={{backgroundColor:"blue"}} textColor="white" size={"lg"}/></Badge></Grid>
         
       </Grid.Container>
