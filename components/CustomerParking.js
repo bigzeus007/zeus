@@ -131,11 +131,7 @@ const CustomerParking = () => {
             alt={`Image of car in place ${myContent.place}`}
             objectFit="fill"
           />
-          
-         
-          <Text color="white" size={"3vw"} css={{ position: "absolute", left: "10%" }}>
-            {num}
-          </Text>
+        
           
         </Card>
       </Col>
