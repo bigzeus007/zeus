@@ -37,6 +37,9 @@ const CustomerParking = () => {
         case "MOHAMMED":
         csCovert="blue";
         break;
+        case "ND":
+        csCovert="red";
+        break;
         
       default: 
       csCovert="gray";
@@ -74,6 +77,7 @@ const CustomerParking = () => {
   const [badr,setBadr]=useState(0);
   const [abdelali,setAbdelali]=useState(0);
   const [mohammed,setMohammed]=useState(0);
+  const [nd,setNd]=useState(0);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(parcListRef, (querySnapshot) => {
@@ -82,12 +86,14 @@ const CustomerParking = () => {
       let badrC=0;
       let abdelaliC=0;
       let mohammedC=0;
+      let ndC=0;
 
       querySnapshot.forEach((doc) => {
         doc.data().csSelected=="BADR"&&badrC++;
         doc.data().csSelected=="AZIZ"&&azizC++;
         doc.data().csSelected=="ABDELALI"&&abdelaliC++;
         doc.data().csSelected=="MOHAMMED"&&mohammedC++;
+        doc.data().csSelected=="ND"&&ndC++;
         carsData.push(doc.data());
       });
       setCars(carsData);
@@ -95,6 +101,7 @@ const CustomerParking = () => {
       setBadr(badrC);
       setAbdelali(abdelaliC);
       setMohammed(mohammedC);
+      setNd(ndC);
 
 
     });
@@ -215,7 +222,7 @@ const CustomerParking = () => {
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={abdelali} ><Avatar text="Abdel" color="" css={{backgroundColor:"green"}} textColor="white" size={"lg"}/></Badge></Grid>
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={badr} ><Avatar text="Badr" color="" css={{backgroundColor:"orange"}} textColor="white" size={"lg"}/></Badge></Grid>
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={mohammed} ><Avatar text="Simo" color="" css={{backgroundColor:"blue"}} textColor="white" size={"lg"}/></Badge></Grid>
-        
+        <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={nd} ><Avatar text="ND" color="" css={{backgroundColor:"red"}} textColor="white" size={"lg"}/></Badge></Grid>
       </Grid.Container>
     </Container>
   ) : (
