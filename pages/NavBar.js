@@ -160,7 +160,7 @@ export default function NavBar() {
               }}
             >
               <p style={{ fontSize: "3vw" }}>
-                User : {auth.currentUser.displayName}
+              User : {auth.currentUser ? auth.currentUser.displayName : "Unknown"}
               </p>
 
               <Image
