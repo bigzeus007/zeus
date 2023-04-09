@@ -154,12 +154,13 @@ export default function NavBar() {
                 display: "flex",
                 color: "black",
                 width: "auto",
-                top: "1vh",
+                top: "0vh",
+                
                 right: "0px",
               }}
             >
               <p style={{ fontSize: "3vw" }}>
-                {/* Bonjour : {auth.currentUser.displayName} */}
+                User : {auth.currentUser.displayName}
               </p>
 
               <Image

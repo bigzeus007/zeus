@@ -117,10 +117,10 @@ const CustomerParking = () => {
     const myContent = findCar(num);
     
     return (
-      <Col span={2} css={{ height: "stretch" }}>
+      <Col span={2} >
         
         <Card
-          css={{ height: "stretch" }}
+          
           isPressable
           onPress={() => {setEditMode(num);setEditModeCarStatus(myContent)}}
         >
@@ -130,14 +130,29 @@ const CustomerParking = () => {
           color={""} 
           textColor="white" 
           css={{position:"absolute",backgroundColor:`${csBadgeColor(myContent.csSelected)}`}}
-          /></Grid>
+          />
+          </Grid>
+          
+          <Badge
+          content={`${myContent.lavage==false?"":"lavé"}`}
+          isSquared
+          color={`${myContent.lavage==false?"warning":"success"}`}
+          
+          variant={`${myContent.lavage==false?"points":""}`}
+          size="md"
+          horizontalOffset="15%"
+          verticalOffset="10%"
+          css={{display:`${myContent.lavage==!myContent.basy?"":"none"}`}}
+          
+        >
           <Image
-            width={320}
-            height={180}
+            width="100%"
+            height="12vh"
             src={`${myContent.imageUrl}`}
             alt={`Image of car in place ${myContent.place}`}
-            objectFit="fill"
+            objectFit="cover"
           />
+          </Badge>
         
           
         </Card>
@@ -149,7 +164,7 @@ const CustomerParking = () => {
     const myContent = findCar(num);
 
     return (
-      <Row span={1} css={{height:"80%"}}>
+      <Row span={1} >
         <Card
           
           isPressable
@@ -164,11 +179,11 @@ const CustomerParking = () => {
           /></Grid>
   
             <Image
-              width={320}
-              height={90}
+              width="100%"
+              height="12vh"
               src={`${myContent.imageUrl}`}
               alt={`Image of car in place ${myContent.place}`}
-              objectFit="fill"
+              objectFit="cover"
             />
            
           
@@ -180,24 +195,26 @@ const CustomerParking = () => {
   };
 
   return editMode == 0 ? (
-    <Container gap={1 }>
-      <Row gap={0} css={{ height: "100px", width: "100%" }}>
+    <Container gap={0 }>
+      <Row gap={0} >
         {parkingAa.map((parkingNum) => (
           <PlaceContentC num={parkingNum} key={parkingNum} />
         ))}
       </Row>
-      <Row gap={0} css={{ height: "100px", width: "100%" }}>
+      <Spacer y={0.5} />
+      <Row gap={0} >
         {parkingAb.map((parkingNum) => (
           <PlaceContentC num={parkingNum} key={parkingNum} />
         ))}
       </Row>
       <Spacer y={1} />
-      <Row gap={0} css={{ height: "100px", width: "100%" }}>
+      <Row gap={0} >
         {parkingBa.map((parkingNum) => (
           <PlaceContentC num={parkingNum} key={parkingNum} />
         ))}
       </Row>
-      <Row gap={0} css={{ height: "100px", width: "100%" }}>
+      <Spacer y={0.5} />
+      <Row gap={0} >
         {parkingBb.map((parkingNum) => (
           <PlaceContentC num={parkingNum} key={parkingNum} />
         ))}
@@ -223,6 +240,9 @@ const CustomerParking = () => {
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={badr} ><Avatar text="Badr" color="" css={{backgroundColor:"orange"}} textColor="white" size={"lg"}/></Badge></Grid>
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={mohammed} ><Avatar text="Simo" color="" css={{backgroundColor:"blue"}} textColor="white" size={"lg"}/></Badge></Grid>
         <Grid><Badge shape="rectangle" size="md" color="error" placement="top-right" content={nd} ><Avatar text="ND" color="" css={{backgroundColor:"red"}} textColor="white" size={"lg"}/></Badge></Grid>
+      </Grid.Container>
+      <Grid.Container css={{backgroundColor:"red"}}>
+
       </Grid.Container>
     </Container>
   ) : (

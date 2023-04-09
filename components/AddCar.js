@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import { db, storage, auth } from "../firebase";
-import { ref, uploadString } from "firebase/storage";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import {
   doc,
   addDoc,
@@ -44,12 +44,25 @@ export default function TakePicture() {
   const userName = auth.currentUser.displayName;
   const [carburant, setCarburant] = useState(0);
 
-  const submitMyCarPhot = (photo, photoId) => {
+  const submitMyCarPhot = async (photo, photoId) => {
+    try{
     const storageRef = ref(storage, `cars/${photoId}`);
-    uploadString(storageRef, image, "data_url").then(() => {
+    // Upload the photo to the storage reference
+    await uploadString(storageRef, photo, "data_url");
+      // Get the download URL of the uploaded photo
+      const url = await getDownloadURL(storageRef);
+      await setDoc(
+        doc(db, "cars", photoId),
+        { imageUrl: url },
+        { merge: true }
+      );
+      // Close the photo here or do something else
       closePhoto();
-    });
-  };
+    
+  }catch (error) {
+    console.log(error);
+    // handle the error here
+  }};
 
   const getVideo = async () => {
     const constraints = {

@@ -10,6 +10,7 @@ import {
   Col,
   Text,
   Button,
+  Badge,
 
 } from "@nextui-org/react";
 import CarCard from "./CarCard";
@@ -49,7 +50,7 @@ export default function ParcSav() {
         setCars(carsData);
       })
       .catch((error) => {
-        BV.log("Error getting documents: ", error);
+        console.log("Error getting documents: ", error);
       });
   }, []);
 
@@ -58,14 +59,20 @@ export default function ParcSav() {
   return editMode == 0 ? (
     <Grid.Container gap={1} justify="flex-start">
       {cars.map((item, index) => (
-        <Grid xs={6} sm={3} key={index}>
-          <Card isPressable>
-            <Card.Header css={{ justifyItems: "flex-start" }}>
-              <Row wrap="wrap" justify="space-between" align="center">
+        <Grid xs={6} sm={3} key={index}  >
+          
+          <Card isPressable onPress={() => {
+                  setCarSelected(item);
+                  setEditMode(item.availability?"Livrer":"Retour");
+                  
+                }}
+                css={{backgroundImage:`${item.carImage}`}}>
+            <Card.Header css={{position:"absolute", justifyItems: "flex-start" }} >
+              <Row justify="space-between" align="center">
                 <Text
                   css={{
                     display: "flex",
-                    color: "$accents7",
+                    color: "white",
                     fontWeight: "$semibold",
                     fontSize: "$sm",
                   }}
@@ -73,21 +80,11 @@ export default function ParcSav() {
                 >
                   {item.marque}
                 </Text>
+                
                 <Text
                   css={{
                     display: "flex",
-                    color: "$accents9",
-                    fontWeight: "$semibold",
-                    fontSize: "$sm",
-                  }}
-                  b
-                >
-                  {item.availability?"Libre":"Réservé"}
-                </Text>
-                <Text
-                  css={{
-                    display: "flex",
-                    color: "$accents7",
+                    color: "white",
                     fontWeight: "$semibold",
                     fontSize: "$sm",
                   }}
@@ -96,48 +93,18 @@ export default function ParcSav() {
                 </Text>
               </Row>
             </Card.Header>
-            <Card.Body css={{ p: 0 }}>
+            
+           
               <CarCard props={item} />
-            </Card.Body>
-            <Card.Footer css={{ justifyItems: "flex-start" }}>
+           
+            <Card.Footer css={{ justifyItems: "flex-start",position:"absolute",bottom:"0px" }}>
               <Row wrap="wrap" justify="space-between" align="center">
-                <Text b>{item.model}</Text>
+                <Text color="white" b>{item.model}</Text>
 
-                <Text b>{item.km + "km"}</Text>
+                <Text color="white"  b>{item.km + "km"}</Text>
               </Row>
             </Card.Footer>
-            {item.availability && (
-              <Grid.Container justify="center">
-              <Button.Group color="gradient" ghost>
-                <Button
-                  onPress={() => {
-                    setCarSelected(item);
-                    setEditMode("Livrer");
-                  }}
-                >
-                  Réservation 
-                </Button>
-                
-              </Button.Group>
-              </Grid.Container>
-            )}
-            {(item.availability == false ) && (
-              <Grid.Container justify="center">
-              <Button.Group color="gradient" ghost>
-
-              <Button
-                onPress={() => {
-                  setCarSelected(item);
-                  setEditMode("Retour");
-                }}
-              >
-                Retour
-              </Button>
-              </Button.Group>
-              </Grid.Container>
-
-
-            )}
+           
             
           </Card>
         </Grid>
@@ -146,40 +113,6 @@ export default function ParcSav() {
   ) : (
     <Grid.Container justify="center">
       <EditCar car={carSlected} setEditMode={setEditMode}></EditCar>
-
-{/* <Card>
-        <Card.Header>
-        <CarCard props={carSlected} />
-
-        </Card.Header>
-        <Card.Body>
-
-        {editMode == "Livrer" && (
-        <Livrer car={carSlected} setEditMode={setEditMode}></Livrer>
-      )}
-      {editMode == "Arret" && (
-        <Immobiliser car={carSlected} setEditMode={setEditMode}></Immobiliser>
-      )}
-      {editMode == "Retour" && (
-        <Retour car={carSlected} setEditMode={setEditMode}></Retour>
-      )}
-
-
-        </Card.Body>
-        <Card.Footer >
-
-          
-        </Card.Footer>
-        </Card> */}
-
-
-
-
-
-
-     
-
-      
 
 
     </Grid.Container>

@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { db, storage } from "@/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { Card, Grid, Image, Row, Text } from "@nextui-org/react";
+import { Badge, Card, Grid, Image, Row, Text } from "@nextui-org/react";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default function CarCard(car) {
@@ -12,10 +12,10 @@ export default function CarCard(car) {
   const availabilityColor = () => {
     switch (car.props.availability) {
       case true:
-        return "green";
+        return {content:"Libre",color:"success"};
 
       case false:
-        return "yellow";
+        return {content:"Occupé",color:"error"};
 
 
       default:
@@ -33,15 +33,29 @@ export default function CarCard(car) {
       .then((url) => setCarImage(url))
       .catch((err) => console.log(err));
   }, []);
+
   
   return (
-    <Image
+    
+    
+    <Badge 
+   
+    color={`${availabilityColor().color}`} content={`${availabilityColor().content}`}  variant="flat" css={{ p: "0" }}
+    horizontalOffset="45%"
+    verticalOffset="45%">
+    <Card.Image
       src={carImage}
-      css={{ backgroundColor: `${availabilityColor()}` }}
-      objectFit="contain"
+      
+      objectFit="fill"
       width="100%"
-      height={160}
+      
+      height={200}
       alt={"loading.."}
     />
+
+    </Badge>
+
+    
+    
   );
 }
