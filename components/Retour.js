@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 export default function Retour({car,setEditMode}) {
   const carToEdit = car;
- 
+  console.log(carToEdit);
   
   const [diesel, setDiesel] = useState(carToEdit.carburant);
  
