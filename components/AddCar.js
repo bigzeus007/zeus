@@ -41,7 +41,7 @@ export default function TakePicture() {
   const [mec, setMec] = useState("");
   const [ass, setAss] = useState("");
   const [service, setService] = useState("");
-  const userName = auth.currentUser.displayName;
+  const userName = auth.currentUser ? auth.currentUser.displayName : "Unknown";
   const [carburant, setCarburant] = useState(0);
 
   const submitMyCarPhot = async (photo, photoId) => {

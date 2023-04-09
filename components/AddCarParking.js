@@ -52,7 +52,7 @@ export default function AddCarParking({
 
   const [loading, setLoading] = useState(0);
 
-  const userName = auth.currentUser.displayName;
+  const userName = auth.currentUser ? auth.currentUser.displayName : "Unknown";
 
   const submitMyCarPhoto = async (photo, photoId) => {
     try {

@@ -25,7 +25,7 @@ export default function EditCar({ car, setEditMode }) {
   const [raison, setRaison] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const userName = auth.currentUser.displayName;
+  const userName = auth.currentUser ? auth.currentUser.displayName : "Unknown";
   const [km, setKm] = useState(0);
 
   const carRef = doc(db, "cars", `${carToEdit.id}`);
