@@ -200,18 +200,13 @@ export default function AddCarParking({
   const handleWasing = async (car) => {
     try {
       const carRef = doc(db, "parkingCustomer", `${car.id}`);
-  
 
       await updateDoc(carRef, {
-        
         basy: false,
-       
-        
+
         lavage: true,
-       
       });
-     
-      
+
       setEditMode(0);
       setLoading(0);
     } catch (error) {
@@ -219,15 +214,13 @@ export default function AddCarParking({
     }
   };
 
-
-  const handleSubmit = async (image,bS) => {
+  const handleSubmit = async (image, bS) => {
     const docRef = await addDoc(carsCollectionRef, {
       createdAt: serverTimestamp(),
       time: new Date().toISOString().substring(0, 16),
       place: place,
       lavage: false,
-      basy:bS,
-      
+      basy: bS,
 
       csSelected: csSelected,
       note: "Vide",
@@ -243,23 +236,19 @@ export default function AddCarParking({
       ],
     });
     await submitMyCarPhoto(image, docRef.id);
-    
 
     await setDoc(
       doc(db, "parkingCustomer", docRef.id),
       {
         id: docRef.id,
-        
       },
       { merge: true }
     );
   };
 
- 
-
   return laboZone ? (
-    <Grid.Container>
-      <Card css={{ display: `${hasPhoto ? "flex" : "none"}` }}>
+    <Grid.Container justify="center" >
+      <Card css={{ display: `${hasPhoto ? "flex" : "none"}`,width:"100vw",maxWidth:"600px",}}>
         <Card.Header css={{ justifyContent: "space-around" }}>
           <Badge size="xl" color="primary" content={`P : ${place}`}>
             <Grid>
@@ -289,7 +278,7 @@ export default function AddCarParking({
                 onPress={() => {
                   setBasy(true);
                   setLoading(1);
-                  handleSubmit(image,!basy);
+                  handleSubmit(image, !basy);
                 }}
               >
                 {loading == 0 ? (
@@ -299,6 +288,7 @@ export default function AddCarParking({
                     src={
                       "https://firebasestorage.googleapis.com/v0/b/terminal00.appspot.com/o/parkingCustomer%2Flavage.jpg?alt=media&token=97009272-d998-4067-9b1e-d0e2c294d3ca"
                     }
+                    alt="Lavage"
                   ></Image>
                 ) : (
                   <Loading size="xl" />
@@ -309,25 +299,27 @@ export default function AddCarParking({
         </Card.Header>
         <Card.Body>
           {!csSelected && (
-            <Grid.Container justify="center">
+            <Grid.Container justify="center" >
               <Radio.Group
+              css={{fontSize:"22px"}}
+              
                 label="Conseillers de service"
                 onChange={(e) => setCsSelected(e)}
                 defaultValue={false}
               >
-                <Radio size="sm" value="AZIZ" isSquared>
+                <Radio value="AZIZ" css={{size:"10px"}} isSquared>
                   AZIZ
                 </Radio>
-                <Radio value="ABDELALI" size="sm" isSquared>
+                <Radio value="ABDELALI" css={{size:"10px"}}  isSquared>
                   ABDELALI
                 </Radio>
-                <Radio size="sm" value="BADR" isSquared>
+                <Radio value="BADR" css={{size:"10px"}}  isSquared>
                   BADR
                 </Radio>
-                <Radio value="MOHAMMED" size="sm" isSquared>
+                <Radio value="MOHAMMED" css={{size:"10px"}}  isSquared>
                   MOHAMMED
                 </Radio>
-                <Radio value="ND" size="sm" isSquared>
+                <Radio value="ND" css={{size:"10px"}}  isSquared>
                   ND
                 </Radio>
               </Radio.Group>
@@ -335,7 +327,8 @@ export default function AddCarParking({
           )}
         </Card.Body>
         <Card.Footer>
-          <Grid.Container wrap="wrap" justify="center">
+          <Grid.Container gap={1} justify="space-evenly" >
+            <Grid>
             <Button
               css={{ width: "25vw" }}
               color="primary"
@@ -345,19 +338,19 @@ export default function AddCarParking({
             >
               Annuler
             </Button>
-            <Spacer y={1} x={2}></Spacer>
+            </Grid>
 
-            {csSelected && (
+            {csSelected && (<Grid>
               <Button
                 css={{ width: "25vw" }}
                 color="success"
                 onPress={() => {
                   setLoading(1);
-                  handleSubmit(image,basy);
+                  handleSubmit(image, basy);
                 }}
               >
                 {loading == 0 ? "Véhicule Prêt" : <Loading size="xs" />}
-              </Button>
+              </Button></Grid>
             )}
           </Grid.Container>
         </Card.Footer>
@@ -397,42 +390,86 @@ export default function AddCarParking({
       <Grid.Container justify="center">
         {(editModeCarStatus.placeStatus && (
           <Grid.Container justify="center">
-            <Card  css={{ width:"80vw",height:"80vh",maxWidth:"600px",justifyContent:"center",backgroundColor:"transparent", }}>
-              {editModeCarStatus.basy==true&&<Card.Header>
-              <Button
-                auto
-                color="warning"
-                rounded
-                css={{width:"100%"}}
-                size={"xl"}
-                onPress={() => {
-                  setLoading(1);
-                  handleWasing(editModeCarStatus);
+            <Card
+              css={{
+                width: "80vw",
+                height: "80vh",
+                maxWidth: "600px",
+                justifyContent: "center",
+                backgroundColor: "transparent",
+              }}
+            >
+              {editModeCarStatus.basy == true && (
+                <Card.Header>
+                  <Button
+                    auto
+                    color="warning"
+                    rounded
+                    css={{ width: "100%" }}
+                    size={"xl"}
+                    onPress={() => {
+                      setLoading(1);
+                      handleWasing(editModeCarStatus);
+                    }}
+                  >
+                    {loading == 0 ? "Véhicule lavé " : <Loading size="xs" />}
+                  </Button>
+                </Card.Header>
+              )}
+
+              <Card.Body
+                css={{
+                  backgroundColor: "transparent",
+                  justifyContent: "center",
+                  borderRadius: "22%",
                 }}
               >
-                {loading == 0 ? "Véhicule lavé " : <Loading size="xs" />}
-              </Button>
-              </Card.Header>}
-              
-              <Card.Body css={{backgroundColor:"transparent",justifyContent:"center",borderRadius:"22%" }}>
-                <Badge enableShadow disableOutline color="error" horizontalOffset="45%" verticalOffset="80%" size="xl" content={editModeCarStatus.time}>
-                <Badge enableShadow disableOutline color="error" horizontalOffset="85%" verticalOffset="10%" size="xl" content={place}>
-                <Badge enableShadow disableOutline color="success" horizontalOffset="10%" verticalOffset="10%" size="lg" content={editModeCarStatus.csSelected}>
-                  <Grid.Container   css={{backgroundColor:"green",width:"76vw",maxWidth:"580px" }}>
-                <Image
-                  
-                  width="100vw"
-                  height="55vh"
-
-                  css={{maxWidth:"580px"}}
-                 
-                  src={`${editModeCarStatus.imageUrl}`}
-                  alt={`Image of car in place ${place}`}
-                  objectFit=""
-                  
-                /></Grid.Container></Badge></Badge></Badge>
-                
-                
+                <Badge
+                  enableShadow
+                  disableOutline
+                  color="error"
+                  horizontalOffset="45%"
+                  verticalOffset="80%"
+                  size="xl"
+                  content={editModeCarStatus.time}
+                >
+                  <Badge
+                    enableShadow
+                    disableOutline
+                    color="error"
+                    horizontalOffset="85%"
+                    verticalOffset="10%"
+                    size="xl"
+                    content={place}
+                  >
+                    <Badge
+                      enableShadow
+                      disableOutline
+                      color="success"
+                      horizontalOffset="10%"
+                      verticalOffset="10%"
+                      size="lg"
+                      content={editModeCarStatus.csSelected}
+                    >
+                      <Grid.Container
+                        css={{
+                          backgroundColor: "green",
+                          width: "76vw",
+                          maxWidth: "580px",
+                        }}
+                      >
+                        <Image
+                          width="100vw"
+                          height="55vh"
+                          css={{ maxWidth: "580px" }}
+                          src={`${editModeCarStatus.imageUrl}`}
+                          alt={`Image of car in place ${place}`}
+                          objectFit=""
+                        />
+                      </Grid.Container>
+                    </Badge>
+                  </Badge>
+                </Badge>
               </Card.Body>
 
               <Button
