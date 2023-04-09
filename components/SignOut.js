@@ -17,7 +17,7 @@ export default function SignOut() {
                 src={photoProfil}
                 alt="photo profil"
               ></Image>
-      <div>{auth.currentUser.displayName}</div>
+      <div>{auth.currentUser ? auth.currentUser.displayName : "Unknown"}</div>
       <button className="sign-out" onClick={() => auth.signOut()}>
         Sign Out
       </button></>

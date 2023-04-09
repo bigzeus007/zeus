@@ -12,7 +12,7 @@ export default function Retour({car,setEditMode}) {
 
  
   const[returnDate,setReturnDate]=useState("");
-  const userName = auth.currentUser.displayName;
+  const userName = auth.currentUser ? auth.currentUser.displayName : "Unknown";
   const[km,setKm]=useState(0);
 
   const carRef = doc(db, "cars",`${carToEdit.id}`);
