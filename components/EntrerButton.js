@@ -39,7 +39,7 @@ const EntrerButton = () => {
               </Grid.Container>
         <div  className={styles.btn}>
         
-          <a onClick={() => handleGoogleSignIn()}  href="#">Accès Gmail</a>
+          <a onClick={() => handleGoogleSignIn()} hidden={loading}  href="#">Accès Gmail</a>
         </div>
       </div>)}
 
