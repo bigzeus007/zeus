@@ -453,15 +453,15 @@ export default function AddCarParking({
                     >
                       <Grid.Container
                         css={{
-                          backgroundColor: "green",
+                          
                           width: "76vw",
                           maxWidth: "580px",
                         }}
                       >
                         <Image
-                          width="100vw"
-                          height="55vh"
-                          css={{ maxWidth: "580px" }}
+                          width="100%"
+                          height="40vh"
+                          css={{ maxWidth: "580px",borderRadius:"20%" }}
                           src={`${editModeCarStatus.imageUrl}`}
                           alt={`Image of car in place ${place}`}
                           objectFit=""
