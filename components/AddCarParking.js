@@ -248,9 +248,9 @@ export default function AddCarParking({
 
   return laboZone ? (
     <Grid.Container justify="center" >
-      <Card css={{ display: `${hasPhoto ? "flex" : "none"}`,width:"100vw",maxWidth:"600px",}}>
+      <Card css={{ display: `${hasPhoto ? "flex" : "none"}`,width:"100vw",maxWidth:"600px",backgroundColor:"transparent"}}>
         <Card.Header css={{ justifyContent: "space-around" }}>
-          <Badge size="xl" color="primary" content={`P : ${place}`}>
+          <Badge size="xl" color="primary" content={`P : ${place}`} >
             <Grid>
               <canvas
                 style={{
