@@ -131,7 +131,7 @@ export default function AddCarParking({
       let ctx = photo.getContext("2d");
       ctx.drawImage(video, 0, 0, photo.width, photo.height);
 
-      const imageCaptured = photo.toDataURL();
+      const imageCaptured = photo.toDataURL('image/jpeg', 0.5);
 
       setImage(imageCaptured);
 
@@ -286,7 +286,7 @@ export default function AddCarParking({
                     objectFit="fill"
                     height="100px"
                     src={
-                      "https://firebasestorage.googleapis.com/v0/b/terminal00.appspot.com/o/parkingCustomer%2Flavage.jpg?alt=media&token=97009272-d998-4067-9b1e-d0e2c294d3ca"
+                      "https://firebasestorage.googleapis.com/v0/b/terminal00.appspot.com/o/parkingCustomer%2Flavage.jpg?alt=media&token=795b18b8-1ead-47a2-aa74-ce654599a1e1"
                     }
                     alt="Lavage"
                   ></Image>
