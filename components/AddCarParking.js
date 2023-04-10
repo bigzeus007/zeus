@@ -286,7 +286,7 @@ export default function AddCarParking({
                     objectFit="fill"
                     height="100px"
                     src={
-                      "https://firebasestorage.googleapis.com/v0/b/terminal00.appspot.com/o/parkingCustomer%2Flavage.jpg?alt=media&token=795b18b8-1ead-47a2-aa74-ce654599a1e1"
+                      "../lavage.jpg"
                     }
                     alt="Lavage"
                   ></Image>
