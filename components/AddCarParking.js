@@ -46,8 +46,9 @@ export default function AddCarParking({
   const [playingVideo, setPlayingVideo] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [lavage, setLavage] = useState(false);
-  const [basy, setBasy] = useState("");
-
+  const [basy, setBasy] = useState(false);
+  const [rdv, setRdv] = useState(false);
+  const [washing, setWashing] = useState(false);
   const inputRef = useRef(null);
 
   const [loading, setLoading] = useState(0);
@@ -131,7 +132,7 @@ export default function AddCarParking({
       let ctx = photo.getContext("2d");
       ctx.drawImage(video, 0, 0, photo.width, photo.height);
 
-      const imageCaptured = photo.toDataURL('image/jpeg', 0.5);
+      const imageCaptured = photo.toDataURL("image/jpeg", 0.5);
 
       setImage(imageCaptured);
 
@@ -163,6 +164,7 @@ export default function AddCarParking({
   const takePictureSwitch = hasPhoto ? "flex" : "none";
 
   const carsCollectionRef = collection(db, "parkingCustomer");
+  const lavageCollectionRef = collection(db, "lavage");
 
   const freePlace = async (car) => {
     try {
@@ -204,7 +206,7 @@ export default function AddCarParking({
       await updateDoc(carRef, {
         basy: false,
 
-        lavage: true,
+        
       });
 
       setEditMode(0);
@@ -213,13 +215,16 @@ export default function AddCarParking({
       console.log(error);
     }
   };
+  const workingDate = new Date().toISOString().substring(0, 10);
 
-  const handleSubmit = async (image, bS) => {
+  const handleSubmit = async (image, bS,lvg) => {
     const docRef = await addDoc(carsCollectionRef, {
       createdAt: serverTimestamp(),
       time: new Date().toISOString().substring(0, 16),
       place: place,
-      lavage: false,
+      rdv: rdv,
+      lavage: lvg,
+
       basy: bS,
 
       csSelected: csSelected,
@@ -231,7 +236,7 @@ export default function AddCarParking({
         {
           qui: userName,
           quoi: "MAJ place",
-          quand: new Date().toISOString().substring(0, 16),
+          quand: workingDate,
         },
       ],
     });
@@ -247,10 +252,17 @@ export default function AddCarParking({
   };
 
   return laboZone ? (
-    <Grid.Container justify="center" >
-      <Card css={{ display: `${hasPhoto ? "flex" : "none"}`,width:"100vw",maxWidth:"600px",backgroundColor:"transparent"}}>
+    <Grid.Container justify="center">
+      <Card
+        css={{
+          display: `${hasPhoto ? "flex" : "none"}`,
+          width: "100vw",
+          maxWidth: "600px",
+          backgroundColor: "transparent",
+        }}
+      >
         <Card.Header css={{ justifyContent: "space-around" }}>
-          <Badge size="xl" color="primary" content={`P : ${place}`} >
+          <Badge size="xl" color="primary" content={`P : ${place}`}>
             <Grid>
               <canvas
                 style={{
@@ -272,54 +284,127 @@ export default function AddCarParking({
           </Badge>
           {csSelected && (
             <Grid>
-              <Button
-                size=""
-                css={{ borderRadius: "100%" }}
+              {washing ? (
+                <Grid>
+                  <Button
+                    auto
+                    shadow={true}
+                    color="gradient"
+                    css={{
+                      height: "10vh",
+                      width: "20vw",
+                      maxWidth: "200px",
+                      minWidth: "70px",
+                      borderRadius: "100%",
+                    }}
+                    onPress={() => {
+                      
+                      setLoading(1);
+                      
+                      handleSubmit(image, true,"complet");
+                    }}
+                  >
+                    {loading == 0 ? <Text>Complet</Text> : <Loading size="xl" />}
+                  </Button>
+                  <Button
+                auto
+                color="success"
+                css={{height:"10vh",width:"20vw",maxWidth:"200px",minWidth:"70px",borderRadius:"100%"}}
                 onPress={() => {
-                  setBasy(true);
+                  
                   setLoading(1);
-                  handleSubmit(image, !basy);
+                  
+                  handleSubmit(image, true,"simple");
                 }}
               >
                 {loading == 0 ? (
-                  <Image
-                    objectFit="fill"
-                    height="100px"
-                    src={
-                      "../lavage.jpg"
-                    }
-                    alt="Lavage"
-                  ></Image>
+                  <Text >Simple</Text>
                 ) : (
                   <Loading size="xl" />
                 )}
               </Button>
+              <Button
+                auto
+                color="warning"
+                css={{height:"10vh",width:"20vw",maxWidth:"200px",minWidth:"70px",borderRadius:"100%"}}
+                onPress={() => {
+                
+                  setLoading(1);
+                 
+                  handleSubmit(image, false,"sans");
+                }}
+              >
+                {loading == 0 ? (
+                  <Text >Sans</Text>
+                ) : (
+                  <Loading size="xl" />
+                )}
+              </Button>
+                </Grid>
+              ) : (
+                <Grid>
+                  <Button
+                    auto
+                    color="success"
+                    css={{
+                      height: "10vh",
+                      width: "20vw",
+                      maxWidth: "200px",
+                      minWidth: "70px",
+                      borderRadius: "100%",
+                    }}
+                    onPress={() => {
+                      setRdv(true);
+                      setWashing(true);
+                    }}
+                  >
+                    RDV
+                  </Button>
+                  <Spacer y={1}></Spacer>
+                  <Button
+                    color="secondary"
+                    auto
+                    css={{
+                      height: "10vh",
+                      width: "20vw",
+                      maxWidth: "200px",
+                      minWidth: "70px",
+                      borderRadius: "100%",
+                    }}
+                    onPress={() => {
+                      setRdv(false);
+                      setWashing(true);
+                    }}
+                  >
+                    SANS RDV
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           )}
         </Card.Header>
         <Card.Body>
           {!csSelected && (
-            <Grid.Container justify="center" >
+            <Grid.Container justify="center">
               <Radio.Group
-              css={{fontSize:"22px"}}
-              
+                css={{ fontSize: "22px" }}
                 label="Conseillers de service"
                 onChange={(e) => setCsSelected(e)}
                 defaultValue={false}
               >
-                <Radio value="AZIZ" css={{size:"10px"}} isSquared>
+                <Radio value="AZIZ" css={{ size: "10px" }} isSquared>
                   AZIZ
                 </Radio>
-                <Radio value="ABDELALI" css={{size:"10px"}}  isSquared>
+                <Radio value="ABDELALI" css={{ size: "10px" }} isSquared>
                   ABDELALI
                 </Radio>
-                <Radio value="BADR" css={{size:"10px"}}  isSquared>
+                <Radio value="BADR" css={{ size: "10px" }} isSquared>
                   BADR
                 </Radio>
-                <Radio value="MOHAMMED" css={{size:"10px"}}  isSquared>
+                <Radio value="MOHAMMED" css={{ size: "10px" }} isSquared>
                   MOHAMMED
                 </Radio>
-                <Radio value="ND" css={{size:"10px"}}  isSquared>
+                <Radio value="ND" css={{ size: "10px" }} isSquared>
                   ND
                 </Radio>
               </Radio.Group>
@@ -327,31 +412,20 @@ export default function AddCarParking({
           )}
         </Card.Body>
         <Card.Footer>
-          <Grid.Container gap={1} justify="space-evenly" >
+          <Grid.Container gap={1} justify="space-evenly">
             <Grid>
-            <Button
-              css={{ width: "25vw" }}
-              color="primary"
-              onPress={() => {
-                closePhoto();
-              }}
-            >
-              Annuler
-            </Button>
-            </Grid>
-
-            {csSelected && (<Grid>
               <Button
                 css={{ width: "25vw" }}
-                color="success"
+                color="primary"
                 onPress={() => {
-                  setLoading(1);
-                  handleSubmit(image, basy);
+                  closePhoto();
                 }}
               >
-                {loading == 0 ? "Véhicule Prêt" : <Loading size="xs" />}
-              </Button></Grid>
-            )}
+                Annuler
+              </Button>
+            </Grid>
+
+            
           </Grid.Container>
         </Card.Footer>
       </Card>
@@ -453,7 +527,6 @@ export default function AddCarParking({
                     >
                       <Grid.Container
                         css={{
-                          
                           width: "76vw",
                           maxWidth: "580px",
                         }}
@@ -461,7 +534,7 @@ export default function AddCarParking({
                         <Image
                           width="100%"
                           height="40vh"
-                          css={{ maxWidth: "580px",borderRadius:"20%" }}
+                          css={{ maxWidth: "580px", borderRadius: "20%" }}
                           src={`${editModeCarStatus.imageUrl}`}
                           alt={`Image of car in place ${place}`}
                           objectFit=""

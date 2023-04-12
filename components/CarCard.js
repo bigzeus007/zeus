@@ -32,7 +32,7 @@ export default function CarCard(car) {
     getDownloadURL(spaceRef)
       .then((url) => setCarImage(url))
       .catch((err) => console.log(err));
-  }, []);
+  }, [spaceRef]);
 
   
   return (

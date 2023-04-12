@@ -15,7 +15,7 @@ import Link from "next/link";
 import TakePicture from "@/components/AddCar";
 import ParcSav from "@/components/ParcSav";
 import CustomerParking from "@/components/CustomerParking";
-import Camera from "@/components/ChatGpt";
+import Camera from "@/components/new/ChatGpt";
 
 export default function NavBar() {
 
