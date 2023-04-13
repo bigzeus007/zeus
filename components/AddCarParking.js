@@ -30,6 +30,7 @@ import {
   Loading,
   Spacer,
   Badge,
+  Avatar,
 } from "@nextui-org/react";
 
 export default function AddCarParking({
@@ -262,6 +263,8 @@ export default function AddCarParking({
         }}
       >
         <Card.Header css={{ justifyContent: "space-around" }}>
+
+       
           <Badge size="xl" color="primary" content={`P : ${place}`}>
             <Grid>
               <canvas
@@ -282,6 +285,9 @@ export default function AddCarParking({
               </Button>
             </Grid>
           </Badge>
+
+
+
           {csSelected && (
             <Grid>
               {washing ? (
@@ -486,7 +492,7 @@ export default function AddCarParking({
                       handleWasing(editModeCarStatus);
                     }}
                   >
-                    {loading == 0 ? "Véhicule lavé " : <Loading size="xs" />}
+                    {loading == 0 ? "Lavage terminé" : <Loading size="xs" />}
                   </Button>
                 </Card.Header>
               )}
@@ -498,19 +504,28 @@ export default function AddCarParking({
                   borderRadius: "22%",
                 }}
               >
+                <Grid>
+        <Avatar 
+          text={editModeCarStatus.rdv==true?"RV":"SR"}
+          color={editModeCarStatus.rdv==true?"success":"warning"}
+          css={{position:"absolute",top:"50%"}}
+          size="md"
+          textColor="white" />
+      </Grid>
                 <Badge
                   enableShadow
                   disableOutline
-                  color="error"
+                  color="secondary"
                   horizontalOffset="45%"
                   verticalOffset="80%"
                   size="xl"
                   content={editModeCarStatus.time}
                 >
-                  <Badge
+                 
+                    <Badge
                     enableShadow
                     disableOutline
-                    color="error"
+                    color="primary"
                     horizontalOffset="85%"
                     verticalOffset="10%"
                     size="xl"
@@ -525,6 +540,16 @@ export default function AddCarParking({
                       size="lg"
                       content={editModeCarStatus.csSelected}
                     >
+                      <Badge
+                      enableShadow
+                      disableOutline
+                      color="success"
+                      horizontalOffset="50%"
+                      verticalOffset="10%"
+                      size="lg"
+                      content={editModeCarStatus.lavage}
+                    >
+
                       <Grid.Container
                         css={{
                           width: "76vw",
@@ -541,8 +566,10 @@ export default function AddCarParking({
                         />
                       </Grid.Container>
                     </Badge>
+                    </Badge>
                   </Badge>
-                </Badge>
+                  </Badge>
+                
               </Card.Body>
 
               <Button
