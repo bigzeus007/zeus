@@ -117,23 +117,7 @@ const CustomerParking = () => {
 
     return (
       <Col span={2}>
-        <Badge
-          enableShadow
-          disableOutline
-         
-          horizontalOffset="10%"
-          verticalOffset="50%"
-          content={`${myContent.lavage}`}
-          isSquared
-          color={`${myContent.rdv == true&&myContent.lavage!=="sans" ? "success" : "default"}`}
-
-         css={{
-            display: `${myContent.lavage == "ND" ? "none" : "flex"}`,
-          }}
-          size="xs"
-         
-
-        >
+        
         <Badge
           enableShadow
           disableOutline
@@ -142,8 +126,8 @@ const CustomerParking = () => {
           verticalOffset="80%"
           content={`${
             myContent.rdv == true 
-              ? "RDV"
-              : "S-RDV"
+              ? "R"
+              : "S"
           }`}
           isSquared
           color={`${myContent.rdv == true ? "success" : ""}`}
@@ -201,7 +185,7 @@ const CustomerParking = () => {
             </Badge>
           </Card>
         </Badge>
-        </Badge>
+       
       </Col>
     );
   };
@@ -211,23 +195,7 @@ const CustomerParking = () => {
 
     return (
       <Row span={1}>
-       <Badge
-          enableShadow
-          disableOutline
-         
-          horizontalOffset="10%"
-          verticalOffset="50%"
-          content={`${myContent.lavage}`}
-          isSquared
-          color={`${myContent.rdv == true&&myContent.lavage!=="sans" ? "success" : "default"}`}
-
-         css={{
-            display: `${myContent.lavage == "ND" ? "none" : "flex"}`,
-          }}
-          size="xs"
-         
-
-        >
+      
         <Badge
           enableShadow
           disableOutline
@@ -236,8 +204,8 @@ const CustomerParking = () => {
           verticalOffset="80%"
           content={`${
             myContent.rdv == true 
-              ? "RDV"
-              : "S-RDV"
+              ? "R"
+              : "S"
           }`}
           isSquared
           color={`${myContent.rdv == true ? "success" : ""}`}
@@ -295,7 +263,7 @@ const CustomerParking = () => {
             </Badge>
           </Card>
         </Badge>
-        </Badge>
+      
       </Row>
     );
   };
