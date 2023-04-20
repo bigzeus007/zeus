@@ -9,9 +9,11 @@ import {
 } from "firebase/storage";
 
 import {
+  getDoc,
   updateDoc,
   doc,
   addDoc,
+  onSnapshot,
   setDoc,
   serverTimestamp,
   collection,
@@ -34,6 +36,10 @@ import {
 } from "@nextui-org/react";
 
 export default function AddCarParking({
+  washingDashboardData,
+  setWashingDashboardData,
+  setWashingArea,
+  washingArea,
   place,
   setEditMode,
   editModeCarStatus,
@@ -51,6 +57,7 @@ export default function AddCarParking({
   const [rdv, setRdv] = useState(false);
   const [washing, setWashing] = useState(false);
   const inputRef = useRef(null);
+  const [confirm, setConfirnm] = useState(0);
 
   const [loading, setLoading] = useState(0);
 
@@ -199,59 +206,127 @@ export default function AddCarParking({
       console.log(error);
     }
   };
+  
+ 
+  
 
-  const handleWasing = async (car) => {
+ 
+  
+  const handleCancelWashing = async (car) => {
     try {
       const carRef = doc(db, "parkingCustomer", `${car.id}`);
-
-      await updateDoc(carRef, {
-        basy: false,
-
+      
+      const washingDashboardSubcollectionRef = doc(db, "washingDashboard",`${car.date}`);
+      
+      const washingDashboardDoc = await getDoc(washingDashboardSubcollectionRef);
+  
+      if (washingDashboardDoc.exists()) {
+        const washingDashboardData = washingDashboardDoc.data();
+    
+        let annuler = washingDashboardData.annuler?washingDashboardData.annuler:0;
+        annuler++;
         
-      });
-
+        await setDoc(washingDashboardSubcollectionRef, {
+          annuler: annuler,
+        },{merge:true});
+      } else {
+        // You can create a new document with annuler set to 1 if it doesn't exist
+        console.log("washingDashboardDoc doesnt exist");
+       
+      }
+      
+      await setDoc(carRef, {
+        basy: false, 
+        lavage: "annuler",
+      },{merge:true});
+  
       setEditMode(0);
       setLoading(0);
+      setConfirnm(0)
     } catch (error) {
       console.log(error);
     }
   };
+  
+
+
+
+
+  
+
   const workingDate = new Date().toISOString().substring(0, 10);
-
-  const handleSubmit = async (image, bS,lvg) => {
-    const docRef = await addDoc(carsCollectionRef, {
-      createdAt: serverTimestamp(),
-      time: new Date().toISOString().substring(0, 16),
-      place: place,
-      rdv: rdv,
-      lavage: lvg,
-
-      basy: bS,
-
-      csSelected: csSelected,
-      note: "Vide",
-
-      placeStatus: true,
-
-      carStory: [
-        {
-          qui: userName,
-          quoi: "MAJ place",
-          quand: workingDate,
-        },
-      ],
-    });
-    await submitMyCarPhoto(image, docRef.id);
-
-    await setDoc(
-      doc(db, "parkingCustomer", docRef.id),
-      {
+  const handleSubmit = async (image, bS, lvg) => {
+    try {
+      const docRef = await addDoc(carsCollectionRef, {
+        createdAt: serverTimestamp(),
+        time: new Date().toISOString().substring(0, 16),
+        date: workingDate,
+        
+        place: place,
+        rdv: rdv,
+        lavage: lvg,
+        basy: bS,
+        csSelected: csSelected,
+        note: "Vide",
+        placeStatus: true,
+        carStory: [
+          {
+            qui: userName,
+            quoi: "MAJ place",
+            quand: workingDate,
+          },
+        ],
+      });
+  
+      await submitMyCarPhoto(image, docRef.id);
+  
+      await setDoc(doc(db, "parkingCustomer", docRef.id), {
         id: docRef.id,
-      },
-      { merge: true }
-    );
+      }, {
+        merge: true
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
-
+  
+  const handleWashing = async (car) => {
+    const washingDashboardRef = doc(db, "washingDashboard", `${workingDate}`);
+      const washingDashboardDoc = await getDoc(washingDashboardRef);
+   
+      try {
+      
+      let washingDashboardData = washingDashboardDoc.exists() ? washingDashboardDoc.data() : {
+        complet: 0,
+        simple: 0,
+        annuler: 0,
+      };
+  
+      const carType = car.lavage == 'complet' ? 'complet' : car.lavage == 'simple' ? 'simple' : 'annuler';
+      const washingCount = Number(washingDashboardData[carType] + 1);
+  
+      await setDoc(washingDashboardRef, {
+        ...washingDashboardData,
+        [carType]: washingCount,
+      }, {
+        merge: true,
+      });
+    
+      const carRef = doc(db, "parkingCustomer", `${car.id}`);
+      await setDoc(carRef, {
+        basy: false,
+      }, {
+        merge: true,
+      });
+  
+      setEditMode(0);
+      setLoading(0);
+    } catch (error) {
+      console.log(error);
+      
+     
+    }
+  };
   return laboZone ? (
     <Grid.Container justify="center">
       <Card
@@ -480,7 +555,8 @@ export default function AddCarParking({
               }}
             >
               {editModeCarStatus.basy == true && (
-                <Card.Header>
+                <Card.Header >
+                  <Grid.Container gap={1} justify="space-evenly">
                   <Button
                     auto
                     color="warning"
@@ -489,11 +565,26 @@ export default function AddCarParking({
                     size={"xl"}
                     onPress={() => {
                       setLoading(1);
-                      handleWasing(editModeCarStatus);
+                      handleWashing(editModeCarStatus);
                     }}
                   >
                     {loading == 0 ? "Lavage terminé" : <Loading size="xs" />}
                   </Button>
+                  <Spacer y={1}></Spacer>
+                  <Button
+                    auto
+                    color={confirm==0?"":"error"}
+                    rounded
+                    css={{ width: "100%" }}
+                    size={"xl"}
+                    onPress={() => {confirm==0?setConfirnm(1):handleCancelWashing(editModeCarStatus)
+                      
+                      
+                    }}
+                  >
+                    {confirm==0? loading == 0 ? "Annulation" : <Loading size="xs" />:"Confirmation"}
+                  </Button>
+                  </Grid.Container>
                 </Card.Header>
               )}
 
@@ -589,7 +680,7 @@ export default function AddCarParking({
                 rounded
                 size={"xl"}
                 onPress={() => {
-                  setEditMode(0);
+                  washingArea==2?setWashingArea(1):setEditMode(0); ;
                 }}
               >
                 Annuler

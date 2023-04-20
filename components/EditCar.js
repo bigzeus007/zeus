@@ -111,7 +111,7 @@ export default function EditCar({ car, setEditMode }) {
                   }
                 >
                   <CarCard props={carToEdit} ></CarCard>
-                  {/* <Image src={carToEdit.imageUrl} height={300} width={150}></Image> */}
+                  
                 </Badge>
               </Badge>
             </Badge>

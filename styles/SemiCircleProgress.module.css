@@ -1,0 +1,13 @@
+.semicircle-progress {
+    display: inline-block;
+  }
+  
+  .background,
+  .foreground {
+    stroke: #ccc;
+  }
+  
+  .foreground {
+    stroke-dasharray: 314.16;
+    stroke-dashoffset: 314.16;
+  }

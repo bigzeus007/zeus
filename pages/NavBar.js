@@ -15,7 +15,7 @@ import Link from "next/link";
 import TakePicture from "@/components/AddCar";
 import ParcSav from "@/components/ParcSav";
 import CustomerParking from "@/components/CustomerParking";
-import Camera from "@/components/new/ChatGpt";
+
 
 export default function NavBar() {
 
@@ -27,6 +27,28 @@ export default function NavBar() {
   const [toggle, setToggle] = useState("close");
   const [rubrique, setRubrique] = useState(null);
   const [darkMode, setDarkMode] = useState("");
+
+  const [user, setUser] = useState({ job: "ND" }); // Initialize user state with default value
+
+  useEffect(() => { // Using useEffect hook to fetch the data
+    const fetchUser = async () => { // Create an async function to fetch the user data
+      const userQuery = query(
+        collection(db, "users"),
+        where("email", "==", `${auth.currentUser.email}`)
+      );
+      const querySnapshot = await getDocs(userQuery); // Fetch the data and wait for the response
+  
+      if (!querySnapshot.empty) { // Check if querySnapshot is not empty
+        const userData = querySnapshot.docs[0].data(); // Get user data from the first document
+        setUser(userData); // Update the user state with fetched data
+      }
+    };
+  
+    fetchUser(); // Call the async function to fetch the user data
+  }, []); // Run this effect only on initial render
+  
+ 
+
 
   const sideBarToggle = (toggle) => {
     toggle === "close" ? setToggle("") : setToggle("close");
@@ -171,10 +193,10 @@ export default function NavBar() {
               ></Image>
             </div>
           </div>
-          {/* <Camera></Camera> */}
+        
           {rubrique == "Parc" && <TakePicture />}
           {rubrique == "ParcSav" && <ParcSav />}
-          {rubrique == "ParkingCustomer" && <CustomerParking />}
+          {rubrique == "ParkingCustomer" && <CustomerParking user={user}/>}
         </section>
       </div>
     </>
