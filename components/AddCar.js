@@ -116,7 +116,7 @@ export default function TakePicture() {
       let ctx = photo.getContext("2d");
       ctx.drawImage(video, 0, 0, photo.width, photo.height);
 
-      const imageCaptured = photo.toDataURL();
+      const imageCaptured = photo.toDataURL("image/jpeg", 0.3);
 
       setImage(imageCaptured);
 
