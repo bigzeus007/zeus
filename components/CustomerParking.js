@@ -15,10 +15,11 @@ import {
 } from "@nextui-org/react";
 import "firebase/firestore";
 import { db, storage } from "../firebase";
-import { collection, getDocs, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, getDocs, orderBy, onSnapshot,doc } from "firebase/firestore";
 import AddCarParking from "./AddCarParking";
+import LavageSav from "./new/LavageSav";
 
-const CustomerParking = () => {
+const CustomerParking = ({user}) => {
   const [editMode, setEditMode] = useState(0);
   const [editModeCarStatus, setEditModeCarStatus] = useState(false);
 
@@ -72,14 +73,15 @@ const CustomerParking = () => {
   const parkingBb = [15, 16, 17, 18];
   const parkingC = [19, 20, 21, 22, 23, 24, 25];
 
-  const parcListRef = collection(db, "parkingCustomer");
+  
   const [cars, setCars] = useState([]);
   const [aziz, setAziz] = useState(0);
   const [badr, setBadr] = useState(0);
   const [abdelali, setAbdelali] = useState(0);
   const [mohammed, setMohammed] = useState(0);
   const [nd, setNd] = useState(0);
-
+  const [washingArea,setWashingArea]=useState(0);
+  const parcListRef = collection(db, "parkingCustomer");
   useEffect(() => {
     const unsubscribe = onSnapshot(parcListRef, (querySnapshot) => {
       const carsData = [];
@@ -107,6 +109,34 @@ const CustomerParking = () => {
 
     return unsubscribe; // cleanup function
   }, []);
+
+  
+  const [washingDashboardData, setWashingDashboardData] = useState({complet:0,simple:0,annuler:0,});
+  
+  useEffect(() => {
+    const workingDate = new Date().toISOString().substring(0, 10);
+    
+  
+   
+      const unsubscribe = onSnapshot(
+        doc(db, "washingDashboard", workingDate),
+        (doc) => {
+          
+          const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+          
+          
+          setWashingDashboardData(doc.data());
+          
+          
+        }
+      );
+      
+      return unsubscribe; // cleanup function
+   
+  }, []);
+
+  
+
 
   function findCar(num) {
     return cars.find((car) => car.place === num) || emptyPlace;
@@ -161,12 +191,16 @@ const CustomerParking = () => {
 
             <Badge
               content={`${
+                myContent.lavage=="annuler"
+                ?"X"
+                :
                 myContent.basy == false 
                   ? "lavé"
                   : ""
+
               }`}
               isSquared
-              color={`${myContent.basy == true ? "warning" : (myContent.rdv ==false ?"error":"success")}`}
+              color={`${myContent.basy == true ? "warning" : (myContent.rdv ==true&&myContent.lavage !=="annuler" ?"success":"error")}`}
               variant={`${myContent.basy == true ? "points" : ""}`}
               size="xs"
               horizontalOffset="15%"
@@ -239,12 +273,16 @@ const CustomerParking = () => {
 
             <Badge
               content={`${
+                myContent.lavage=="annuler"
+                ?"X"
+                :
                 myContent.basy == false 
                   ? "lavé"
                   : ""
+                  
               }`}
               isSquared
-              color={`${myContent.basy == true ? "warning" : (myContent.rdv ==false ?"error":"success")}`}
+              color={`${myContent.basy == true ? "warning" : (myContent.rdv ==true&&myContent.lavage !=="annuler" ?"success":"error")}`}
               variant={`${myContent.basy == true ? "points" : ""}`}
               size="xs"
               horizontalOffset="15%"
@@ -268,7 +306,8 @@ const CustomerParking = () => {
     );
   };
 
-  return editMode == 0 ? (
+  return washingArea !== 1 ? (
+  editMode == 0 ? (
     <Container gap={0}>
       <Row gap={0}>
         {parkingAa.map((parkingNum) => (
@@ -395,15 +434,22 @@ const CustomerParking = () => {
           </Badge>
         </Grid>
       </Grid.Container>
-      <Grid.Container css={{ backgroundColor: "red" }}></Grid.Container>
+      {user.job=="BETA"&&<Grid.Container justify="center" css={{ position:"absolute",size:"auto",bottom:"15vh",right:"15vw" }}>
+        <Grid><Badge content="" variant="points" color="warning"><Button  auto size="lg" color="warning" onPress={()=>{setWashingArea(1)}}>?</Button></Badge></Grid>
+      </Grid.Container>}
     </Container>
   ) : (
     <AddCarParking
       place={editMode}
       setEditMode={setEditMode}
+      setWashingDashboardData={setWashingDashboardData}
+      washingDashboardData={washingDashboardData}
+
+      setWashingArea={setWashingArea}
+      washingArea={washingArea} 
       editModeCarStatus={editModeCarStatus}
     />
-  );
+  )):(<LavageSav cars={cars} setWashingArea={setWashingArea} setWashingDashboardData={setWashingDashboardData} washingDashboardData={washingDashboardData} setEditMode={setEditMode} setEditModeCarStatus={setEditModeCarStatus} washingArea={washingArea} />)
 };
 
 export default CustomerParking;

@@ -15,6 +15,7 @@ import {
   Text,
   Card,
   Container,
+  Row,
   Grid,
   Input,
   Radio,
@@ -23,24 +24,31 @@ import {
   Badge,
 } from "@nextui-org/react";
 
-import LavageEncours from "./LavageEncours";
-import WashingDashbord from "./WashingDashbord";
+
+
 import NextLavage from "./NextLavage";
 
-export default function LavageSav() {
-  return (
-    <Grid.Container gap={2} justify="center">
-      <Grid xs={12} sm={4}>
-        <NextLavage />
-      </Grid>
+export default function LavageSav({setWashingArea,cars,setEditMode,setEditModeCarStatus,washingArea,washingDashboardData,setWashingDashboardData}) {
+  
+  const listAttenteLavage= cars.filter((car)=>{if(car.basy==true&&car.lavage!=="sans"){return car}});
+  const listCarsWashed= cars.filter((car)=>{if(car.basy==false&&(car.lavage=="simple"||car.lavage=="complet")){return car}});
+  const listCanceledWashing= cars.filter((car)=>{if(car.lavage=="annulé"){return car}});
+ 
 
-      <Grid xs={12} sm={4}>
-        <LavageEncours />
-      </Grid>
 
-      <Grid xs={12} sm={4}>
-        <WashingDashbord />
+  return (washingArea==1?(
+    <Grid.Container gap={2} justify="center" >
+      <Grid >
+      <Text size="$xl" color="secondary">En attente de Lavage</Text>
       </Grid>
-    </Grid.Container>
+     
+        <NextLavage listAttenteLavage={listAttenteLavage} setEditMode={setEditMode} setWashingDashboardData={setWashingDashboardData} washingDashboardData={washingDashboardData} setEditModeCarStatus={setEditModeCarStatus} setWashingArea={setWashingArea} washingArea={washingArea}/>
+      
+
+    
+      <Grid >
+        <Button color="primary" onPress={()=>{setWashingArea(0);setEditMode(0)}}>Retour</Button>
+      </Grid>
+    </Grid.Container>):""
   );
 }
