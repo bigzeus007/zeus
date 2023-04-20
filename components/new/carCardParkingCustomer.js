@@ -54,7 +54,7 @@ const CarCardParkingCustomer = ({
     <Grid >
       <Grid>
             <Avatar
-              text={`${myContent.place}`}
+              text="jjjj"
               color={""}
               size="sm"
               textColor="white"
@@ -117,9 +117,10 @@ const CarCardParkingCustomer = ({
           
             <Image
               showSkeleton
-              width={150}
-              height={100}
-              css={{ minWidth: "150px" }}
+              
+             
+             
+              css={{width:"15vw",height:"10vh"}}
               src={`${myContent.imageUrl}`}
               alt={`Image of car in place ${myContent.place}`}
               objectFit="cover"

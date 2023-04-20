@@ -140,7 +140,7 @@ export default function AddCarParking({
       let ctx = photo.getContext("2d");
       ctx.drawImage(video, 0, 0, photo.width, photo.height);
 
-      const imageCaptured = photo.toDataURL("image/jpeg", 0.5);
+      const imageCaptured = photo.toDataURL("image/jpeg", 0.1);
 
       setImage(imageCaptured);
 
@@ -650,10 +650,10 @@ export default function AddCarParking({
                         <Image
                           width="100%"
                           height="40vh"
-                          css={{ maxWidth: "580px", borderRadius: "20%" }}
+                          css={{ maxWidth: "580px", borderRadius: "100%" }}
                           src={`${editModeCarStatus.imageUrl}`}
                           alt={`Image of car in place ${place}`}
-                          objectFit=""
+                          objectFit="cover"
                         />
                       </Grid.Container>
                     </Badge>
@@ -662,12 +662,14 @@ export default function AddCarParking({
                   </Badge>
                 
               </Card.Body>
-
+                      <Grid.Container gap={1}  justify="center"> 
+                      
               <Button
-                auto
+              auto
                 color={"success"}
                 rounded
                 size={"xl"}
+                css={{width:"100%"}}
                 onPress={() => {
                   setLoading(1);
                   freePlace(editModeCarStatus);
@@ -675,9 +677,11 @@ export default function AddCarParking({
               >
                 {loading == 0 ? `Livrer : ${place}` : <Loading size="xs" />}
               </Button>
-
+              <Spacer y={2}></Spacer>
               <Button
                 rounded
+                auto
+                css={{width:"100%"}}
                 size={"xl"}
                 onPress={() => {
                   washingArea==2?setWashingArea(1):setEditMode(0); ;
@@ -685,6 +689,8 @@ export default function AddCarParking({
               >
                 Annuler
               </Button>
+             
+              </Grid.Container> 
             </Card>
           </Grid.Container>
         )) || (

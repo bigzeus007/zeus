@@ -40,7 +40,7 @@ export default function NextLavage({listAttenteLavage,setEditMode,setEditModeCar
     <Text size="md" color="primary" >Liste Lavage Sans RDV</Text>
     </Grid.Container>
      
-      <Grid.Container  justify="center" css={{backgroundColor:"pink"}} >
+      <Grid.Container  justify="space-evenly" css={{backgroundColor:"pink"}} >
       {orderedListLavageSrdv.map((myContent,index) => (
       
         <CarCardParkingCustomer myContent={myContent} key={index} setEditMode={setEditMode} setEditModeCarStatus={setEditModeCarStatus} setWashingArea={setWashingArea} washingArea={washingArea}/>
@@ -52,7 +52,7 @@ export default function NextLavage({listAttenteLavage,setEditMode,setEditModeCar
       </Grid.Container>
       
 
-      <Grid.Container justify="center" css={{backgroundColor:"pink"}} >
+      <Grid.Container justify="space-evenly" css={{backgroundColor:"pink"}} >
 
       {orderedListLavageRdv.map((myContent,index) => (
       
@@ -66,7 +66,7 @@ export default function NextLavage({listAttenteLavage,setEditMode,setEditModeCar
       <Spacer y={0.5}></Spacer>
 
    
-    {washingDashboardData&&<Grid.Container gap={2}>
+    {washingDashboardData&&<Grid.Container justify="center" gap={2}>
       <Grid>
         <Badge color="error" content={washingDashboardData.complet} shape="rectangle" size="md">
           <Avatar
@@ -91,6 +91,9 @@ export default function NextLavage({listAttenteLavage,setEditMode,setEditModeCar
             text="X"
           />
         </Badge>
+      </Grid>
+      <Grid css={{width:"30vw",maxWidth:"100px"}} >
+        <SemiCircleProgressBar washingDashboardData={washingDashboardData}></SemiCircleProgressBar>
       </Grid>
      
     </Grid.Container>}
