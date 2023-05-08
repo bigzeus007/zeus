@@ -67,11 +67,11 @@ const CustomerParking = ({user}) => {
       },
     ],
   };
-  const parkingAa = [1, 2, 3, 4, 5];
-  const parkingAb = [6, 7, 8, 9, 10];
-  const parkingBa = [11, 12, 13, 14];
-  const parkingBb = [15, 16, 17, 18];
-  const parkingC = [19, 20, 21, 22, 23, 24, 25];
+  const parkingAa = [11, 12, 13, 14, 15];
+  const parkingAb = [16, 17, 18, 19, 20];
+  const parkingBa = [21, 22, 23, 24];
+  const parkingBb = [25, 26, 27];
+  const parkingC = [28, 29, 30, 31, 32, 33];
 
   
   const [cars, setCars] = useState([]);

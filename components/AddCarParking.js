@@ -545,24 +545,15 @@ export default function AddCarParking({
       <Grid.Container justify="center">
         {(editModeCarStatus.placeStatus && (
           <Grid.Container justify="center">
-            <Card
-              css={{
-                width: "80vw",
-                height: "80vh",
-                maxWidth: "600px",
-                justifyContent: "center",
-                backgroundColor: "transparent",
-              }}
-            >
-              {editModeCarStatus.basy == true && (
+            {editModeCarStatus.basy == true && (
                 <Card.Header >
                   <Grid.Container gap={1} justify="space-evenly">
                   <Button
                     auto
                     color="warning"
                     rounded
-                    css={{ width: "100%" }}
-                    size={"xl"}
+                   
+                    size={"md"}
                     onPress={() => {
                       setLoading(1);
                       handleWashing(editModeCarStatus);
@@ -575,8 +566,8 @@ export default function AddCarParking({
                     auto
                     color={confirm==0?"":"error"}
                     rounded
-                    css={{ width: "100%" }}
-                    size={"xl"}
+                   
+                    size={"md"}
                     onPress={() => {confirm==0?setConfirnm(1):handleCancelWashing(editModeCarStatus)
                       
                       
@@ -587,6 +578,16 @@ export default function AddCarParking({
                   </Grid.Container>
                 </Card.Header>
               )}
+            <Card
+              css={{
+                width: "70vw",
+                height: "40vh",
+                maxWidth: "600px",
+                justifyContent: "center",
+                backgroundColor: "transparent",
+              }}
+            >
+              
 
               <Card.Body
                 css={{
@@ -643,11 +644,13 @@ export default function AddCarParking({
 
                       <Grid.Container
                         css={{
-                          width: "76vw",
-                          maxWidth: "580px",
+                          width: "70vw",
+                          maxWidth: "550px",
+                         
+                          
                         }}
                       >
-                        <Image
+                        <Card.Image
                           width="100%"
                           height="40vh"
                           css={{ maxWidth: "580px", borderRadius: "100%" }}
@@ -662,14 +665,16 @@ export default function AddCarParking({
                   </Badge>
                 
               </Card.Body>
-                      <Grid.Container gap={1}  justify="center"> 
+                      
+            </Card>
+            <Grid.Container gap={1}  justify="center" > 
                       
               <Button
               auto
                 color={"success"}
                 rounded
                 size={"xl"}
-                css={{width:"100%"}}
+                
                 onPress={() => {
                   setLoading(1);
                   freePlace(editModeCarStatus);
@@ -681,7 +686,7 @@ export default function AddCarParking({
               <Button
                 rounded
                 auto
-                css={{width:"100%"}}
+               
                 size={"xl"}
                 onPress={() => {
                   washingArea==2?setWashingArea(1):setEditMode(0); ;
@@ -691,7 +696,6 @@ export default function AddCarParking({
               </Button>
              
               </Grid.Container> 
-            </Card>
           </Grid.Container>
         )) || (
           <Grid.Container
