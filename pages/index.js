@@ -1,5 +1,4 @@
 import React from "react";
-import "firebase/firestore";
 import { Grid, Loading, Text } from "@nextui-org/react";
 import Login from "./Login";
 import { auth } from "../firebase";

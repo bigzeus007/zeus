@@ -21,8 +21,8 @@ import {
   Radio,
   Loading,
   Spacer,
-  Badge,
 } from "@nextui-org/react";
+import MiniBadge from "../MiniBadge";
 
 
 

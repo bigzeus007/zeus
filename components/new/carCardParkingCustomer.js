@@ -10,10 +10,9 @@ import {
   Row,
   Col,
   Button,
-  Badge,
   Avatar,
 } from "@nextui-org/react";
-import "firebase/firestore";
+import MiniBadge from "../MiniBadge";
 import { db, storage } from "../../firebase";
 import { collection, getDocs, orderBy, onSnapshot } from "firebase/firestore";
 
@@ -51,44 +50,44 @@ const CarCardParkingCustomer = ({
   }
 
   return (
-    <Grid >
+    <Grid>
       <Grid>
-            <Avatar
-              text="jjjj"
-              color={""}
-              size="sm"
-              textColor="white"
-              css={{
-                position: "absolute",
-                backgroundColor: `${csBadgeColor(myContent.csSelected)}`,
-              }}
-            />
-          </Grid>
-      <Badge
-            content={`${
-              myContent.lavage == "annuler"
-                ? "X"
-                : myContent.basy == false
-                ? "lavé"
-                : ""
-            }`}
-            isSquared
-            color={`${
-              myContent.basy == true
-                ? "warning"
-                : myContent.rdv == true && myContent.lavage !== "annuler"
-                ? "success"
-                : "error"
-            }`}
-            variant={`${myContent.basy == true ? "points" : ""}`}
-            size="xs"
-            horizontalOffset="15%"
-            verticalOffset="10%"
-            css={{
-              display: `${myContent.lavage == "sans" ? "none" : "flex"}`,
-            }}
-          >
-    <Badge
+        <Avatar
+          text="jjjj"
+          color={""}
+          size="sm"
+          textColor="white"
+          css={{
+            position: "absolute",
+            backgroundColor: `${csBadgeColor(myContent.csSelected)}`,
+          }}
+        />
+      </Grid>
+      <MiniBadge
+        content={`${
+          myContent.lavage == "annuler"
+            ? "X"
+            : myContent.basy == false
+            ? "lavé"
+            : ""
+        }`}
+        isSquared
+        color={`${
+          myContent.basy == true
+            ? "warning"
+            : myContent.rdv == true && myContent.lavage !== "annuler"
+            ? "success"
+            : "error"
+        }`}
+        variant={`${myContent.basy == true ? "points" : ""}`}
+        size="xs"
+        horizontalOffset="15%"
+        verticalOffset="10%"
+        css={{
+          display: `${myContent.lavage == "sans" ? "none" : "flex"}`,
+        }}
+      >
+        <MiniBadge
           enableShadow
           disableOutline
           horizontalOffset="10%"
@@ -101,37 +100,26 @@ const CarCardParkingCustomer = ({
             display: `${myContent.rdv == "ND" ? "none" : "flex"}`,
           }}
         >
-    <Button
-      css={{ backgroundColor: "red",}}
-      size={1}
-      onPress={() => {
-        setWashingArea(2);
-        setEditMode(myContent.place);
-        setEditModeCarStatus(myContent);
-      }}
-    >
-     
-        
-          
-
-          
+          <Button
+            css={{ backgroundColor: "red" }}
+            size={1}
+            onPress={() => {
+              setWashingArea(2);
+              setEditMode(myContent.place);
+              setEditModeCarStatus(myContent);
+            }}
+          >
             <Image
               showSkeleton
-              
-             
-             
-              css={{width:"15vw",height:"10vh"}}
+              css={{ width: "15vw", height: "10vh" }}
               src={`${myContent.imageUrl}`}
               alt={`Image of car in place ${myContent.place}`}
               objectFit="cover"
             />
-          
-       
-      
-    </Button>
-     </Badge>
-     </Badge>
-     </Grid>
+          </Button>
+        </MiniBadge>
+      </MiniBadge>
+    </Grid>
   );
 };
 export default CarCardParkingCustomer;

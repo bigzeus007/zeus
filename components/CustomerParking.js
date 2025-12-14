@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "../styles/Parking.module.css";
 import {
   Grid,
@@ -10,16 +10,21 @@ import {
   Row,
   Col,
   Button,
-  Badge,
   Avatar,
 } from "@nextui-org/react";
-import "firebase/firestore";
+import MiniBadge from "./MiniBadge";
 import { db, storage } from "../firebase";
-import { collection, getDocs, orderBy, onSnapshot,doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  onSnapshot,
+  doc,
+} from "firebase/firestore";
 import AddCarParking from "./AddCarParking";
 import LavageSav from "./new/LavageSav";
 
-const CustomerParking = ({user}) => {
+const CustomerParking = ({ user }) => {
   const [editMode, setEditMode] = useState(0);
   const [editModeCarStatus, setEditModeCarStatus] = useState(false);
 
@@ -53,8 +58,8 @@ const CustomerParking = ({user}) => {
     place: 0,
     placeStatus: false,
     csSelected: "",
-    rdv:"ND",
-    lavage:"ND",
+    rdv: "ND",
+    lavage: "ND",
     cs: "",
     note: "",
     date: "",
@@ -73,15 +78,14 @@ const CustomerParking = ({user}) => {
   const parkingBb = [25, 26, 27];
   const parkingC = [28, 29, 30, 31, 32, 33];
 
-  
   const [cars, setCars] = useState([]);
   const [aziz, setAziz] = useState(0);
   const [badr, setBadr] = useState(0);
   const [abdelali, setAbdelali] = useState(0);
   const [mohammed, setMohammed] = useState(0);
   const [nd, setNd] = useState(0);
-  const [washingArea,setWashingArea]=useState(0);
-  const parcListRef = collection(db, "parkingCustomer");
+  const [washingArea, setWashingArea] = useState(0);
+  const parcListRef = useMemo(() => collection(db, "parkingCustomer"), []);
   useEffect(() => {
     const unsubscribe = onSnapshot(parcListRef, (querySnapshot) => {
       const carsData = [];
@@ -108,35 +112,28 @@ const CustomerParking = ({user}) => {
     });
 
     return unsubscribe; // cleanup function
-  }, []);
+  }, [parcListRef]);
 
-  
-  const [washingDashboardData, setWashingDashboardData] = useState({complet:0,simple:0,annuler:0,});
-  
+  const [washingDashboardData, setWashingDashboardData] = useState({
+    complet: 0,
+    simple: 0,
+    annuler: 0,
+  });
+
   useEffect(() => {
     const workingDate = new Date().toISOString().substring(0, 10);
-    
-  
-   
-      const unsubscribe = onSnapshot(
-        doc(db, "washingDashboard", workingDate),
-        (doc) => {
-          
-          const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-          
-          
-          setWashingDashboardData(doc.data());
-          
-          
-        }
-      );
-      
-      return unsubscribe; // cleanup function
-   
+
+    const unsubscribe = onSnapshot(
+      doc(db, "washingDashboard", workingDate),
+      (doc) => {
+        const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+
+        setWashingDashboardData(doc.data());
+      }
+    );
+
+    return unsubscribe; // cleanup function
   }, []);
-
-  
-
 
   function findCar(num) {
     return cars.find((car) => car.place === num) || emptyPlace;
@@ -147,26 +144,18 @@ const CustomerParking = ({user}) => {
 
     return (
       <Col span={2}>
-        
-        <Badge
+        <MiniBadge
           enableShadow
           disableOutline
-         
           horizontalOffset="10%"
           verticalOffset="80%"
-          content={`${
-            myContent.rdv == true 
-              ? "R"
-              : "S"
-          }`}
+          content={`${myContent.rdv == true ? "R" : "S"}`}
           isSquared
           color={`${myContent.rdv == true ? "success" : ""}`}
-         
           size="xs"
           css={{
             display: `${myContent.rdv == "ND" ? "none" : "flex"}`,
           }}
-
         >
           <Card
             isPressable
@@ -181,7 +170,6 @@ const CustomerParking = ({user}) => {
                 color={""}
                 size="sm"
                 textColor="white"
-              
                 css={{
                   position: "absolute",
                   backgroundColor: `${csBadgeColor(myContent.csSelected)}`,
@@ -189,18 +177,22 @@ const CustomerParking = ({user}) => {
               />
             </Grid>
 
-            <Badge
+            <MiniBadge
               content={`${
-                myContent.lavage=="annuler"
-                ?"X"
-                :
-                myContent.basy == false 
+                myContent.lavage == "annuler"
+                  ? "X"
+                  : myContent.basy == false
                   ? "lavé"
                   : ""
-
               }`}
               isSquared
-              color={`${myContent.basy == true ? "warning" : (myContent.rdv ==true&&myContent.lavage !=="annuler" ?"success":"error")}`}
+              color={`${
+                myContent.basy == true
+                  ? "warning"
+                  : myContent.rdv == true && myContent.lavage !== "annuler"
+                  ? "success"
+                  : "error"
+              }`}
               variant={`${myContent.basy == true ? "points" : ""}`}
               size="xs"
               horizontalOffset="15%"
@@ -216,10 +208,9 @@ const CustomerParking = ({user}) => {
                 alt={`Image of car in place ${myContent.place}`}
                 objectFit="cover"
               />
-            </Badge>
+            </MiniBadge>
           </Card>
-        </Badge>
-       
+        </MiniBadge>
       </Col>
     );
   };
@@ -229,26 +220,18 @@ const CustomerParking = ({user}) => {
 
     return (
       <Row span={1}>
-      
-        <Badge
+        <MiniBadge
           enableShadow
           disableOutline
-         
           horizontalOffset="10%"
           verticalOffset="80%"
-          content={`${
-            myContent.rdv == true 
-              ? "R"
-              : "S"
-          }`}
+          content={`${myContent.rdv == true ? "R" : "S"}`}
           isSquared
           color={`${myContent.rdv == true ? "success" : ""}`}
-         
           size="xs"
           css={{
             display: `${myContent.rdv == "ND" ? "none" : "flex"}`,
           }}
-
         >
           <Card
             isPressable
@@ -263,7 +246,6 @@ const CustomerParking = ({user}) => {
                 color={""}
                 size="sm"
                 textColor="white"
-              
                 css={{
                   position: "absolute",
                   backgroundColor: `${csBadgeColor(myContent.csSelected)}`,
@@ -271,18 +253,22 @@ const CustomerParking = ({user}) => {
               />
             </Grid>
 
-            <Badge
+            <MiniBadge
               content={`${
-                myContent.lavage=="annuler"
-                ?"X"
-                :
-                myContent.basy == false 
+                myContent.lavage == "annuler"
+                  ? "X"
+                  : myContent.basy == false
                   ? "lavé"
                   : ""
-                  
               }`}
               isSquared
-              color={`${myContent.basy == true ? "warning" : (myContent.rdv ==true&&myContent.lavage !=="annuler" ?"success":"error")}`}
+              color={`${
+                myContent.basy == true
+                  ? "warning"
+                  : myContent.rdv == true && myContent.lavage !== "annuler"
+                  ? "success"
+                  : "error"
+              }`}
               variant={`${myContent.basy == true ? "points" : ""}`}
               size="xs"
               horizontalOffset="15%"
@@ -298,158 +284,190 @@ const CustomerParking = ({user}) => {
                 alt={`Image of car in place ${myContent.place}`}
                 objectFit="cover"
               />
-            </Badge>
+            </MiniBadge>
           </Card>
-        </Badge>
-      
+        </MiniBadge>
       </Row>
     );
   };
 
   return washingArea !== 1 ? (
-  editMode == 0 ? (
-    <Container gap={0}>
-      <Row gap={0}>
-        {parkingAa.map((parkingNum) => (
-          <PlaceContentC num={parkingNum} key={parkingNum} />
-        ))}
-      </Row>
-      <Spacer y={0.5} />
-      <Row gap={0}>
-        {parkingAb.map((parkingNum) => (
-          <PlaceContentC num={parkingNum} key={parkingNum} />
-        ))}
-      </Row>
-      <Spacer y={1} />
-      <Row gap={0}>
-        {parkingBa.map((parkingNum) => (
-          <PlaceContentC num={parkingNum} key={parkingNum} />
-        ))}
-      </Row>
-      <Spacer y={0.5} />
-      <Row gap={0}>
-        {parkingBb.map((parkingNum) => (
-          <PlaceContentC num={parkingNum} key={parkingNum} />
-        ))}
-      </Row>
-      <Spacer y={1} />
-      <Container
-        gap={0}
-        css={{
-          position: "absolute",
-          top: "13%",
-          right: "0%",
-          height: "100px",
-          width: "15%",
-        }}
-      >
-        {parkingC.map((parkingNum) => (
-          <PlaceContentR num={parkingNum} key={parkingNum} />
-        ))}
+    editMode == 0 ? (
+      <Container gap={0}>
+        <Row gap={0}>
+          {parkingAa.map((parkingNum) => (
+            <PlaceContentC num={parkingNum} key={parkingNum} />
+          ))}
+        </Row>
+        <Spacer y={0.5} />
+        <Row gap={0}>
+          {parkingAb.map((parkingNum) => (
+            <PlaceContentC num={parkingNum} key={parkingNum} />
+          ))}
+        </Row>
+        <Spacer y={1} />
+        <Row gap={0}>
+          {parkingBa.map((parkingNum) => (
+            <PlaceContentC num={parkingNum} key={parkingNum} />
+          ))}
+        </Row>
+        <Spacer y={0.5} />
+        <Row gap={0}>
+          {parkingBb.map((parkingNum) => (
+            <PlaceContentC num={parkingNum} key={parkingNum} />
+          ))}
+        </Row>
+        <Spacer y={1} />
+        <Container
+          gap={0}
+          css={{
+            position: "absolute",
+            top: "13%",
+            right: "0%",
+            height: "100px",
+            width: "15%",
+          }}
+        >
+          {parkingC.map((parkingNum) => (
+            <PlaceContentR num={parkingNum} key={parkingNum} />
+          ))}
+        </Container>
+        <Grid.Container css={{ width: "50vw" }} display={"flex"} gap={1}>
+          <Grid>
+            <MiniBadge
+              shape="rectangle"
+              size="md"
+              color="error"
+              placement="top-right"
+              content={aziz}
+            >
+              <Avatar
+                text="Aziz"
+                color=""
+                css={{ backgroundColor: "purple" }}
+                textColor="white"
+                size={"lg"}
+              />
+            </MiniBadge>
+          </Grid>
+          <Grid>
+            <MiniBadge
+              shape="rectangle"
+              size="md"
+              color="error"
+              placement="top-right"
+              content={abdelali}
+            >
+              <Avatar
+                text="Abdel"
+                color=""
+                css={{ backgroundColor: "green" }}
+                textColor="white"
+                size={"lg"}
+              />
+            </MiniBadge>
+          </Grid>
+          <Grid>
+            <MiniBadge
+              shape="rectangle"
+              size="md"
+              color="error"
+              placement="top-right"
+              content={badr}
+            >
+              <Avatar
+                text="Badr"
+                color=""
+                css={{ backgroundColor: "orange" }}
+                textColor="white"
+                size={"lg"}
+              />
+            </MiniBadge>
+          </Grid>
+          <Grid>
+            <MiniBadge
+              shape="rectangle"
+              size="md"
+              color="error"
+              placement="top-right"
+              content={mohammed}
+            >
+              <Avatar
+                text="Simo"
+                color=""
+                css={{ backgroundColor: "blue" }}
+                textColor="white"
+                size={"lg"}
+              />
+            </MiniBadge>
+          </Grid>
+          <Grid>
+            <MiniBadge
+              shape="rectangle"
+              size="md"
+              color="error"
+              placement="top-right"
+              content={nd}
+            >
+              <Avatar
+                text="ND"
+                color=""
+                css={{ backgroundColor: "red" }}
+                textColor="white"
+                size={"lg"}
+              />
+            </MiniBadge>
+          </Grid>
+        </Grid.Container>
+        {user.job == "BETA" && (
+          <Grid.Container
+            justify="center"
+            css={{
+              position: "absolute",
+              size: "auto",
+              bottom: "15vh",
+              right: "15vw",
+            }}
+          >
+            <Grid>
+              <MiniBadge content="" variant="points" color="warning">
+                <Button
+                  auto
+                  size="lg"
+                  color="warning"
+                  onPress={() => {
+                    setWashingArea(1);
+                  }}
+                >
+                  ?
+                </Button>
+              </MiniBadge>
+            </Grid>
+          </Grid.Container>
+        )}
       </Container>
-      <Grid.Container css={{ width: "50vw" }} display={"flex"} gap={1}>
-        <Grid>
-          <Badge
-            shape="rectangle"
-            size="md"
-            color="error"
-            placement="top-right"
-            content={aziz}
-          >
-            <Avatar
-              text="Aziz"
-              color=""
-              css={{ backgroundColor: "purple" }}
-              textColor="white"
-              size={"lg"}
-            />
-          </Badge>
-        </Grid>
-        <Grid>
-          <Badge
-            shape="rectangle"
-            size="md"
-            color="error"
-            placement="top-right"
-            content={abdelali}
-          >
-            <Avatar
-              text="Abdel"
-              color=""
-              css={{ backgroundColor: "green" }}
-              textColor="white"
-              size={"lg"}
-            />
-          </Badge>
-        </Grid>
-        <Grid>
-          <Badge
-            shape="rectangle"
-            size="md"
-            color="error"
-            placement="top-right"
-            content={badr}
-          >
-            <Avatar
-              text="Badr"
-              color=""
-              css={{ backgroundColor: "orange" }}
-              textColor="white"
-              size={"lg"}
-            />
-          </Badge>
-        </Grid>
-        <Grid>
-          <Badge
-            shape="rectangle"
-            size="md"
-            color="error"
-            placement="top-right"
-            content={mohammed}
-          >
-            <Avatar
-              text="Simo"
-              color=""
-              css={{ backgroundColor: "blue" }}
-              textColor="white"
-              size={"lg"}
-            />
-          </Badge>
-        </Grid>
-        <Grid>
-          <Badge
-            shape="rectangle"
-            size="md"
-            color="error"
-            placement="top-right"
-            content={nd}
-          >
-            <Avatar
-              text="ND"
-              color=""
-              css={{ backgroundColor: "red" }}
-              textColor="white"
-              size={"lg"}
-            />
-          </Badge>
-        </Grid>
-      </Grid.Container>
-      {user.job=="BETA"&&<Grid.Container justify="center" css={{ position:"absolute",size:"auto",bottom:"15vh",right:"15vw" }}>
-        <Grid><Badge content="" variant="points" color="warning"><Button  auto size="lg" color="warning" onPress={()=>{setWashingArea(1)}}>?</Button></Badge></Grid>
-      </Grid.Container>}
-    </Container>
+    ) : (
+      <AddCarParking
+        place={editMode}
+        setEditMode={setEditMode}
+        setWashingDashboardData={setWashingDashboardData}
+        washingDashboardData={washingDashboardData}
+        setWashingArea={setWashingArea}
+        washingArea={washingArea}
+        editModeCarStatus={editModeCarStatus}
+      />
+    )
   ) : (
-    <AddCarParking
-      place={editMode}
-      setEditMode={setEditMode}
+    <LavageSav
+      cars={cars}
+      setWashingArea={setWashingArea}
       setWashingDashboardData={setWashingDashboardData}
       washingDashboardData={washingDashboardData}
-
-      setWashingArea={setWashingArea}
-      washingArea={washingArea} 
-      editModeCarStatus={editModeCarStatus}
+      setEditMode={setEditMode}
+      setEditModeCarStatus={setEditModeCarStatus}
+      washingArea={washingArea}
     />
-  )):(<LavageSav cars={cars} setWashingArea={setWashingArea} setWashingDashboardData={setWashingDashboardData} washingDashboardData={washingDashboardData} setEditMode={setEditMode} setEditModeCarStatus={setEditModeCarStatus} washingArea={washingArea} />)
+  );
 };
 
 export default CustomerParking;

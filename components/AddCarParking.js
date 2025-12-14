@@ -31,9 +31,9 @@ import {
   Radio,
   Loading,
   Spacer,
-  Badge,
   Avatar,
 } from "@nextui-org/react";
+import MiniBadge from "./MiniBadge";
 
 export default function AddCarParking({
   washingDashboardData,
@@ -206,53 +206,57 @@ export default function AddCarParking({
       console.log(error);
     }
   };
-  
- 
-  
 
- 
-  
   const handleCancelWashing = async (car) => {
     try {
       const carRef = doc(db, "parkingCustomer", `${car.id}`);
-      
-      const washingDashboardSubcollectionRef = doc(db, "washingDashboard",`${car.date}`);
-      
-      const washingDashboardDoc = await getDoc(washingDashboardSubcollectionRef);
-  
+
+      const washingDashboardSubcollectionRef = doc(
+        db,
+        "washingDashboard",
+        `${car.date}`
+      );
+
+      const washingDashboardDoc = await getDoc(
+        washingDashboardSubcollectionRef
+      );
+
       if (washingDashboardDoc.exists()) {
         const washingDashboardData = washingDashboardDoc.data();
-    
-        let annuler = washingDashboardData.annuler?washingDashboardData.annuler:0;
+
+        let annuler = washingDashboardData.annuler
+          ? washingDashboardData.annuler
+          : 0;
         annuler++;
-        
-        await setDoc(washingDashboardSubcollectionRef, {
-          annuler: annuler,
-        },{merge:true});
+
+        await setDoc(
+          washingDashboardSubcollectionRef,
+          {
+            annuler: annuler,
+          },
+          { merge: true }
+        );
       } else {
         // You can create a new document with annuler set to 1 if it doesn't exist
         console.log("washingDashboardDoc doesnt exist");
-       
       }
-      
-      await setDoc(carRef, {
-        basy: false, 
-        lavage: "annuler",
-      },{merge:true});
-  
+
+      await setDoc(
+        carRef,
+        {
+          basy: false,
+          lavage: "annuler",
+        },
+        { merge: true }
+      );
+
       setEditMode(0);
       setLoading(0);
-      setConfirnm(0)
+      setConfirnm(0);
     } catch (error) {
       console.log(error);
     }
   };
-  
-
-
-
-
-  
 
   const workingDate = new Date().toISOString().substring(0, 10);
   const handleSubmit = async (image, bS, lvg) => {
@@ -261,7 +265,7 @@ export default function AddCarParking({
         createdAt: serverTimestamp(),
         time: new Date().toISOString().substring(0, 16),
         date: workingDate,
-        
+
         place: place,
         rdv: rdv,
         lavage: lvg,
@@ -277,54 +281,70 @@ export default function AddCarParking({
           },
         ],
       });
-  
+
       await submitMyCarPhoto(image, docRef.id);
-  
-      await setDoc(doc(db, "parkingCustomer", docRef.id), {
-        id: docRef.id,
-      }, {
-        merge: true
-      });
+
+      await setDoc(
+        doc(db, "parkingCustomer", docRef.id),
+        {
+          id: docRef.id,
+        },
+        {
+          merge: true,
+        }
+      );
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const handleWashing = async (car) => {
     const washingDashboardRef = doc(db, "washingDashboard", `${workingDate}`);
-      const washingDashboardDoc = await getDoc(washingDashboardRef);
-   
-      try {
-      
-      let washingDashboardData = washingDashboardDoc.exists() ? washingDashboardDoc.data() : {
-        complet: 0,
-        simple: 0,
-        annuler: 0,
-      };
-  
-      const carType = car.lavage == 'complet' ? 'complet' : car.lavage == 'simple' ? 'simple' : 'annuler';
+    const washingDashboardDoc = await getDoc(washingDashboardRef);
+
+    try {
+      let washingDashboardData = washingDashboardDoc.exists()
+        ? washingDashboardDoc.data()
+        : {
+            complet: 0,
+            simple: 0,
+            annuler: 0,
+          };
+
+      const carType =
+        car.lavage == "complet"
+          ? "complet"
+          : car.lavage == "simple"
+          ? "simple"
+          : "annuler";
       const washingCount = Number(washingDashboardData[carType] + 1);
-  
-      await setDoc(washingDashboardRef, {
-        ...washingDashboardData,
-        [carType]: washingCount,
-      }, {
-        merge: true,
-      });
-    
+
+      await setDoc(
+        washingDashboardRef,
+        {
+          ...washingDashboardData,
+          [carType]: washingCount,
+        },
+        {
+          merge: true,
+        }
+      );
+
       const carRef = doc(db, "parkingCustomer", `${car.id}`);
-      await setDoc(carRef, {
-        basy: false,
-      }, {
-        merge: true,
-      });
-  
+      await setDoc(
+        carRef,
+        {
+          basy: false,
+        },
+        {
+          merge: true,
+        }
+      );
+
       setEditMode(0);
       setLoading(0);
     } catch (error) {
       console.log(error);
-      
-     
     }
   };
   return laboZone ? (
@@ -338,9 +358,7 @@ export default function AddCarParking({
         }}
       >
         <Card.Header css={{ justifyContent: "space-around" }}>
-
-       
-          <Badge size="xl" color="primary" content={`P : ${place}`}>
+          <MiniBadge size="xl" color="primary" content={`P : ${place}`}>
             <Grid>
               <canvas
                 style={{
@@ -359,9 +377,7 @@ export default function AddCarParking({
                 {csSelected ? csSelected : "Conseiller"}
               </Button>
             </Grid>
-          </Badge>
-
-
+          </MiniBadge>
 
           {csSelected && (
             <Grid>
@@ -379,48 +395,53 @@ export default function AddCarParking({
                       borderRadius: "100%",
                     }}
                     onPress={() => {
-                      
                       setLoading(1);
-                      
-                      handleSubmit(image, true,"complet");
+
+                      handleSubmit(image, true, "complet");
                     }}
                   >
-                    {loading == 0 ? <Text>Complet</Text> : <Loading size="xl" />}
+                    {loading == 0 ? (
+                      <Text>Complet</Text>
+                    ) : (
+                      <Loading size="xl" />
+                    )}
                   </Button>
                   <Button
-                auto
-                color="success"
-                css={{height:"10vh",width:"20vw",maxWidth:"200px",minWidth:"70px",borderRadius:"100%"}}
-                onPress={() => {
-                  
-                  setLoading(1);
-                  
-                  handleSubmit(image, true,"simple");
-                }}
-              >
-                {loading == 0 ? (
-                  <Text >Simple</Text>
-                ) : (
-                  <Loading size="xl" />
-                )}
-              </Button>
-              <Button
-                auto
-                color="warning"
-                css={{height:"10vh",width:"20vw",maxWidth:"200px",minWidth:"70px",borderRadius:"100%"}}
-                onPress={() => {
-                
-                  setLoading(1);
-                 
-                  handleSubmit(image, false,"sans");
-                }}
-              >
-                {loading == 0 ? (
-                  <Text >Sans</Text>
-                ) : (
-                  <Loading size="xl" />
-                )}
-              </Button>
+                    auto
+                    color="success"
+                    css={{
+                      height: "10vh",
+                      width: "20vw",
+                      maxWidth: "200px",
+                      minWidth: "70px",
+                      borderRadius: "100%",
+                    }}
+                    onPress={() => {
+                      setLoading(1);
+
+                      handleSubmit(image, true, "simple");
+                    }}
+                  >
+                    {loading == 0 ? <Text>Simple</Text> : <Loading size="xl" />}
+                  </Button>
+                  <Button
+                    auto
+                    color="warning"
+                    css={{
+                      height: "10vh",
+                      width: "20vw",
+                      maxWidth: "200px",
+                      minWidth: "70px",
+                      borderRadius: "100%",
+                    }}
+                    onPress={() => {
+                      setLoading(1);
+
+                      handleSubmit(image, false, "sans");
+                    }}
+                  >
+                    {loading == 0 ? <Text>Sans</Text> : <Loading size="xl" />}
+                  </Button>
                 </Grid>
               ) : (
                 <Grid>
@@ -505,8 +526,6 @@ export default function AddCarParking({
                 Annuler
               </Button>
             </Grid>
-
-            
           </Grid.Container>
         </Card.Footer>
       </Card>
@@ -546,13 +565,12 @@ export default function AddCarParking({
         {(editModeCarStatus.placeStatus && (
           <Grid.Container justify="center">
             {editModeCarStatus.basy == true && (
-                <Card.Header >
-                  <Grid.Container gap={1} justify="space-evenly">
+              <Card.Header>
+                <Grid.Container gap={1} justify="space-evenly">
                   <Button
                     auto
                     color="warning"
                     rounded
-                   
                     size={"md"}
                     onPress={() => {
                       setLoading(1);
@@ -564,20 +582,28 @@ export default function AddCarParking({
                   <Spacer y={1}></Spacer>
                   <Button
                     auto
-                    color={confirm==0?"":"error"}
+                    color={confirm == 0 ? "" : "error"}
                     rounded
-                   
                     size={"md"}
-                    onPress={() => {confirm==0?setConfirnm(1):handleCancelWashing(editModeCarStatus)
-                      
-                      
+                    onPress={() => {
+                      confirm == 0
+                        ? setConfirnm(1)
+                        : handleCancelWashing(editModeCarStatus);
                     }}
                   >
-                    {confirm==0? loading == 0 ? "Annulation" : <Loading size="xs" />:"Confirmation"}
+                    {confirm == 0 ? (
+                      loading == 0 ? (
+                        "Annulation"
+                      ) : (
+                        <Loading size="xs" />
+                      )
+                    ) : (
+                      "Confirmation"
+                    )}
                   </Button>
-                  </Grid.Container>
-                </Card.Header>
-              )}
+                </Grid.Container>
+              </Card.Header>
+            )}
             <Card
               css={{
                 width: "70vw",
@@ -587,8 +613,6 @@ export default function AddCarParking({
                 backgroundColor: "transparent",
               }}
             >
-              
-
               <Card.Body
                 css={{
                   backgroundColor: "transparent",
@@ -597,14 +621,17 @@ export default function AddCarParking({
                 }}
               >
                 <Grid>
-        <Avatar 
-          text={editModeCarStatus.rdv==true?"RV":"SR"}
-          color={editModeCarStatus.rdv==true?"success":"warning"}
-          css={{position:"absolute",top:"50%"}}
-          size="md"
-          textColor="white" />
-      </Grid>
-                <Badge
+                  <Avatar
+                    text={editModeCarStatus.rdv == true ? "RV" : "SR"}
+                    color={
+                      editModeCarStatus.rdv == true ? "success" : "warning"
+                    }
+                    css={{ position: "absolute", top: "50%" }}
+                    size="md"
+                    textColor="white"
+                  />
+                </Grid>
+                <MiniBadge
                   enableShadow
                   disableOutline
                   color="secondary"
@@ -613,8 +640,7 @@ export default function AddCarParking({
                   size="xl"
                   content={editModeCarStatus.time}
                 >
-                 
-                    <Badge
+                  <MiniBadge
                     enableShadow
                     disableOutline
                     color="primary"
@@ -623,7 +649,7 @@ export default function AddCarParking({
                     size="xl"
                     content={place}
                   >
-                    <Badge
+                    <MiniBadge
                       enableShadow
                       disableOutline
                       color="success"
@@ -632,49 +658,42 @@ export default function AddCarParking({
                       size="lg"
                       content={editModeCarStatus.csSelected}
                     >
-                      <Badge
-                      enableShadow
-                      disableOutline
-                      color="success"
-                      horizontalOffset="50%"
-                      verticalOffset="10%"
-                      size="lg"
-                      content={editModeCarStatus.lavage}
-                    >
-
-                      <Grid.Container
-                        css={{
-                          width: "70vw",
-                          maxWidth: "550px",
-                         
-                          
-                        }}
+                      <MiniBadge
+                        enableShadow
+                        disableOutline
+                        color="success"
+                        horizontalOffset="50%"
+                        verticalOffset="10%"
+                        size="lg"
+                        content={editModeCarStatus.lavage}
                       >
-                        <Card.Image
-                          width="100%"
-                          height="40vh"
-                          css={{ maxWidth: "580px", borderRadius: "100%" }}
-                          src={`${editModeCarStatus.imageUrl}`}
-                          alt={`Image of car in place ${place}`}
-                          objectFit="cover"
-                        />
-                      </Grid.Container>
-                    </Badge>
-                    </Badge>
-                  </Badge>
-                  </Badge>
-                
+                        <Grid.Container
+                          css={{
+                            width: "70vw",
+                            maxWidth: "550px",
+                          }}
+                        >
+                          <Card.Image
+                            width="100%"
+                            height="40vh"
+                            css={{ maxWidth: "580px", borderRadius: "100%" }}
+                            src={`${editModeCarStatus.imageUrl}`}
+                            alt={`Image of car in place ${place}`}
+                            objectFit="cover"
+                          />
+                        </Grid.Container>
+                      </MiniBadge>
+                    </MiniBadge>
+                  </MiniBadge>
+                </MiniBadge>
               </Card.Body>
-                      
             </Card>
-            <Grid.Container gap={1}  justify="center" > 
-                      
+            <Grid.Container gap={1} justify="center">
               <Button
-              auto
+                auto
                 color={"success"}
                 rounded
                 size={"xl"}
-                
                 onPress={() => {
                   setLoading(1);
                   freePlace(editModeCarStatus);
@@ -686,16 +705,14 @@ export default function AddCarParking({
               <Button
                 rounded
                 auto
-               
                 size={"xl"}
                 onPress={() => {
-                  washingArea==2?setWashingArea(1):setEditMode(0); ;
+                  washingArea == 2 ? setWashingArea(1) : setEditMode(0);
                 }}
               >
                 Annuler
               </Button>
-             
-              </Grid.Container> 
+            </Grid.Container>
           </Grid.Container>
         )) || (
           <Grid.Container

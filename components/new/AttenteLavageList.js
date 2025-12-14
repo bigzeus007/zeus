@@ -2,11 +2,10 @@
 // import { useRef } from "react";
 // import { db, storage, auth } from "../../firebase";
 
-
 // import {
 //   updateDoc,
 //   doc,
- 
+
 //   setDoc,
 //   serverTimestamp,
 //   collection,
@@ -23,31 +22,29 @@
 //   Radio,
 //   Loading,
 //   Spacer,
-//   Badge,
 // } from "@nextui-org/react";
 
 // export default function AttenteLavageList({attenteLavageList}) {
 
 //   const carWCard = ({ car }) => {
-    
 
 //     return (
 //       <Col span={2}>
-        
-//         <Badge
+
+//         <MiniBadge
 //           enableShadow
 //           disableOutline
-         
+
 //           horizontalOffset="10%"
 //           verticalOffset="80%"
 //           content={`${
-//             myContent.rdv == true 
+//             myContent.rdv == true
 //               ? "R"
 //               : "S"
 //           }`}
 //           isSquared
 //           color={`${myContent.rdv == true ? "success" : ""}`}
-         
+
 //           size="xs"
 //           css={{
 //             display: `${myContent.rdv == "ND" ? "none" : "flex"}`,
@@ -67,7 +64,7 @@
 //                 color={""}
 //                 size="sm"
 //                 textColor="white"
-              
+
 //                 css={{
 //                   position: "absolute",
 //                   backgroundColor: `${csBadgeColor(myContent.csSelected)}`,
@@ -75,9 +72,9 @@
 //               />
 //             </Grid>
 
-//             <Badge
+//             <MiniBadge
 //               content={`${
-//                 myContent.basy == false 
+//                 myContent.basy == false
 //                   ? "lavé"
 //                   : ""
 //               }`}
@@ -98,20 +95,17 @@
 //                 alt={`Image of car in place ${myContent.place}`}
 //                 objectFit="cover"
 //               />
-//             </Badge>
+//             </MiniBadge>
 //           </Card>
-//         </Badge>
-       
+//         </MiniBadge>
+
 //       </Col>
 //     );
 //   };
 
-
 //   return (
 //     <Grid.Container gap={2} justify="center">
 
-    
-   
 //   </Grid.Container>
 //   );
 // }

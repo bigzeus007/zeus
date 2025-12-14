@@ -8,10 +8,10 @@ import {
   Progress,
   Text,
   Textarea,
-  Badge,
   Spacer,
   Image,
 } from "@nextui-org/react";
+import MiniBadge from "./MiniBadge";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import CarCard from "./CarCard";
@@ -55,78 +55,70 @@ export default function EditCar({ car, setEditMode }) {
   };
 
   return (
-    <Card css={{ height:"auto", mw: "80vw" }}>
+    <Card css={{ height: "auto", mw: "80vw" }}>
       <Card.Header>
         <Grid.Container gap={1} justify="center">
-         {!carToEdit.availability && (
-          <Grid x={18}>
-            <Text>
-              Retour Le : {carToEdit.returnDate}
-            </Text>
+          {!carToEdit.availability && (
+            <Grid x={18}>
+              <Text>Retour Le : {carToEdit.returnDate}</Text>
+            </Grid>
+          )}
+          <Grid css={{ width: "40%", minWidth: "200px" }}>
+            <Input
+              label="Nom Client"
+              type="text"
+              placeholder={carToEdit.customer}
+              disabled={!carStatus}
+              onChange={(e) => {
+                setNom(e.target.value);
+              }}
+            />
           </Grid>
-        )}
-        <Grid css={{width:"40%", minWidth:"200px",}} >
-          <Input
-            label="Nom Client"
-            type="text"
-            placeholder={carToEdit.customer}
-            disabled={!carStatus}
-            onChange={(e) => {
-              setNom(e.target.value);
-            }}
-          />
-        </Grid>
 
-        <Grid x={6} >
-          <Badge
-            content={<Text color="white">km : {carToEdit.km}</Text>}
-            disableOutline
-            color="transparent"
-            horizontalOffset="65%"
-            verticalOffset="90%"
-          >
-            <Badge
-              content={<Text color="white">{carToEdit.marque}</Text>}
-              color="transparent"
+          <Grid x={6}>
+            <MiniBadge
+              content={<Text color="white">km : {carToEdit.km}</Text>}
               disableOutline
-              horizontalOffset="70%"
-              verticalOffset="13%"
+              color="transparent"
+              horizontalOffset="65%"
+              verticalOffset="90%"
             >
-              <Badge
-                content={<Text color="white">{carToEdit.model}</Text>}
+              <MiniBadge
+                content={<Text color="white">{carToEdit.marque}</Text>}
                 color="transparent"
                 disableOutline
-                horizontalOffset="10%"
+                horizontalOffset="70%"
                 verticalOffset="13%"
               >
-                <Badge
-                  placement="centre"
-                  content={
-                    <Progress
-                      css={{ width: "90px" }}
-                      value={diesel}
-                      color="success"
-                      status="error"
-                    />
-                  }
+                <MiniBadge
+                  content={<Text color="white">{carToEdit.model}</Text>}
+                  color="transparent"
+                  disableOutline
+                  horizontalOffset="10%"
+                  verticalOffset="13%"
                 >
-                  <CarCard props={carToEdit} ></CarCard>
-                  
-                </Badge>
-              </Badge>
-            </Badge>
-          </Badge>
-        </Grid>
+                  <MiniBadge
+                    placement="centre"
+                    content={
+                      <Progress
+                        css={{ width: "90px" }}
+                        value={diesel}
+                        color="success"
+                        status="error"
+                      />
+                    }
+                  >
+                    <CarCard props={carToEdit}></CarCard>
+                  </MiniBadge>
+                </MiniBadge>
+              </MiniBadge>
+            </MiniBadge>
+          </Grid>
         </Grid.Container>
-        </Card.Header>
-      <Grid.Container gap={0} justify="center" >
-       
-
-        
-
-     
+      </Card.Header>
+      <Grid.Container gap={0} justify="center">
         {carToEdit.availability == carStatus && (
-          <Grid css={{width:"80%",minWidth:"200px"}}>
+          <Grid css={{ width: "80%", minWidth: "200px" }}>
             <Textarea
               label="Raisons, Téléphone, CLT"
               placeholder={!carStatus ? `${carToEdit.raison}` : ""}
@@ -138,10 +130,9 @@ export default function EditCar({ car, setEditMode }) {
             />
           </Grid>
         )}
-       
 
         {carStatus && (
-          <Grid css={{width:"35%",minWidth:"150px"}}>
+          <Grid css={{ width: "35%", minWidth: "150px" }}>
             <Input
               label="Niveau Gasoil %"
               type="number"
@@ -154,7 +145,7 @@ export default function EditCar({ car, setEditMode }) {
         <Spacer x={1}></Spacer>
 
         {carStatus && (
-          <Grid css={{width:"35%",minWidth:"150px"}}>
+          <Grid css={{ width: "35%", minWidth: "150px" }}>
             <Input
               label="Km"
               type="number"
@@ -164,7 +155,7 @@ export default function EditCar({ car, setEditMode }) {
         )}
 
         {carToEdit.availability && (
-          <Grid css={{width:"35%",minWidth:"200px"}}>
+          <Grid css={{ width: "35%", minWidth: "200px" }}>
             <Input
               label="Date de sortie"
               type="date"
@@ -174,7 +165,7 @@ export default function EditCar({ car, setEditMode }) {
         )}
 
         {carStatus && (
-          <Grid css={{width:"35%",minWidth:"200px"}}>
+          <Grid css={{ width: "35%", minWidth: "200px" }}>
             <Input
               label="Date de retour Prevue"
               type="date"
@@ -183,29 +174,29 @@ export default function EditCar({ car, setEditMode }) {
           </Grid>
         )}
       </Grid.Container>
-      
+
       <Card.Footer css={{ justifyContent: "center" }}>
         <Grid.Container gap={2} justify="center">
-        {!carStatus && (
-          <Grid >
-            <Button onPress={() => setCarStatus(true)} size="lg" >
-              Déverrouiller
+          {!carStatus && (
+            <Grid>
+              <Button onPress={() => setCarStatus(true)} size="lg">
+                Déverrouiller
+              </Button>
+            </Grid>
+          )}
+          {carStatus && (
+            <Grid>
+              <Button onPress={() => handleSubmit()} size="lg">
+                Enregistrer
+              </Button>
+            </Grid>
+          )}
+
+          <Grid>
+            <Button onPress={() => setEditMode(0)} size="lg">
+              Retour
             </Button>
           </Grid>
-        )}
-        {carStatus && (
-          <Grid >
-            <Button onPress={() => handleSubmit()} size="lg"  >
-              Enregistrer
-            </Button>
-          </Grid>
-        )}
-        
-        <Grid >
-          <Button onPress={() => setEditMode(0)} size="lg" >
-            Retour
-          </Button>
-        </Grid >
         </Grid.Container>
       </Card.Footer>
     </Card>

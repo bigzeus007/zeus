@@ -20,7 +20,6 @@
 //   Radio,
 //   Loading,
 //   Spacer,
-//   Badge,
 // } from "@nextui-org/react";
 
 // export default function WashingDashbord({myContent}) {

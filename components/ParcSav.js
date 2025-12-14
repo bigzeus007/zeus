@@ -1,18 +1,8 @@
-import { useState, useEffect } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import React, { useEffect, useMemo, useState } from "react";
 import { db, storage } from "../firebase";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
-import {
-  Card,
-  Grid,
-  Row,
-  Col,
-  Text,
-  Button,
-  Badge,
-
-} from "@nextui-org/react";
+import { Card, Grid, Row, Col, Text, Button } from "@nextui-org/react";
+import MiniBadge from "./MiniBadge";
 import CarCard from "./CarCard";
 
 import Livrer from "./Livrer";
@@ -37,7 +27,7 @@ export default function ParcSav() {
     },
   ];
 
-  const parcListRef = collection(db, "cars");
+  const parcListRef = useMemo(() => collection(db, "cars"), []);
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
@@ -52,22 +42,23 @@ export default function ParcSav() {
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
-  }, []);
-
-
+  }, [parcListRef]);
 
   return editMode == 0 ? (
     <Grid.Container gap={1} justify="flex-start">
       {cars.map((item, index) => (
-        <Grid xs={6} sm={3} key={index}  >
-          
-          <Card isPressable onPress={() => {
-                  setCarSelected(item);
-                  setEditMode(item.availability?"Livrer":"Retour");
-                  
-                }}
-                css={{backgroundImage:`${item.carImage}`}}>
-            <Card.Header css={{position:"absolute", justifyItems: "flex-start" }} >
+        <Grid xs={6} sm={3} key={index}>
+          <Card
+            isPressable
+            onPress={() => {
+              setCarSelected(item);
+              setEditMode(item.availability ? "Livrer" : "Retour");
+            }}
+            css={{ backgroundImage: `${item.carImage}` }}
+          >
+            <Card.Header
+              css={{ position: "absolute", justifyItems: "flex-start" }}
+            >
               <Row justify="space-between" align="center">
                 <Text
                   css={{
@@ -80,7 +71,7 @@ export default function ParcSav() {
                 >
                   {item.marque}
                 </Text>
-                
+
                 <Text
                   css={{
                     display: "flex",
@@ -93,19 +84,26 @@ export default function ParcSav() {
                 </Text>
               </Row>
             </Card.Header>
-            
-           
-              <CarCard props={item} />
-           
-            <Card.Footer css={{ justifyItems: "flex-start",position:"absolute",bottom:"0px" }}>
-              <Row wrap="wrap" justify="space-between" align="center">
-                <Text color="white" b>{item.model}</Text>
 
-                <Text color="white"  b>{item.km + "km"}</Text>
+            <CarCard props={item} />
+
+            <Card.Footer
+              css={{
+                justifyItems: "flex-start",
+                position: "absolute",
+                bottom: "0px",
+              }}
+            >
+              <Row wrap="wrap" justify="space-between" align="center">
+                <Text color="white" b>
+                  {item.model}
+                </Text>
+
+                <Text color="white" b>
+                  {item.km + "km"}
+                </Text>
               </Row>
             </Card.Footer>
-           
-            
           </Card>
         </Grid>
       ))}
@@ -113,8 +111,6 @@ export default function ParcSav() {
   ) : (
     <Grid.Container justify="center">
       <EditCar car={carSlected} setEditMode={setEditMode}></EditCar>
-
-
     </Grid.Container>
   );
 }
