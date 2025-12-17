@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
-import { db, storage, auth } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import {
   doc,

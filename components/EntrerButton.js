@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "../styles/Button.module.css";
-import { auth } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import {
   GoogleAuthProvider,
   signInWithPopup,

@@ -1,6 +1,6 @@
 import React from "react";
 import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db, storage } from "../firebase";
 
 export default function GoogleLoginButton() {
   const loginPopup = async () => {

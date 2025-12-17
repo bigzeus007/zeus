@@ -1,4 +1,4 @@
-import { auth } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import React from "react";
 
 import Image from "next/image";

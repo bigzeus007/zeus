@@ -1,4 +1,4 @@
-import { auth, db } from "@/firebase";
+import { auth, db } from "../firebase";
 import { Button, Grid, Input, Progress, Text, Textarea } from "@nextui-org/react";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";

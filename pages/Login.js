@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Card, Grid, Loading, Text } from "@nextui-org/react";
 import { GoogleOutlined } from "@ant-design/icons";
 import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db, storage } from "../firebase";
 
 const provider = new GoogleAuthProvider();
 

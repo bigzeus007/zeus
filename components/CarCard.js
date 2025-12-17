@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { storage } from "@/firebase";
+import { storage } from "../firebase";
 import { ref, getDownloadURL } from "firebase/storage";
 import { Card } from "@nextui-org/react";
 import MiniBadge from "./MiniBadge";

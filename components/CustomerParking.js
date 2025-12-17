@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import styles from "../styles/Parking.module.css";
 import { Text, Avatar, Modal, Button } from "@nextui-org/react";
 import MiniBadge from "./MiniBadge";
-import { db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { collection, onSnapshot, doc } from "firebase/firestore";
 import AddCarParking from "./AddCarParking";
 import LavageSav from "./new/LavageSav";
