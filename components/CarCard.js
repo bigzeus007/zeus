@@ -1,49 +1,47 @@
-import { useState, useEffect } from "react";
-import { db, storage } from "@/firebase";
-import { collection, getDocs } from "firebase/firestore";
-import { Card, Grid, Image, Row, Text } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import { storage } from "@/firebase";
+import { ref, getDownloadURL } from "firebase/storage";
+import { Card } from "@nextui-org/react";
 import MiniBadge from "./MiniBadge";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-export default function CarCard(car) {
-  const availabilityColor = () => {
-    switch (car.props.availability) {
-      case true:
-        return { content: "Libre", color: "success" };
-
-      case false:
-        return { content: "Occupé", color: "error" };
-
-      default:
-        return "white";
-    }
-  };
-
+export default function CarCard({ props }) {
   const [carImage, setCarImage] = useState("");
 
-  const spaceRef = ref(storage, `cars/${car.props.id}`);
+  const badge = (() => {
+    if (props?.availability === true) return { content: "Libre", color: "success" };
+    if (props?.availability === false) return { content: "Occupé", color: "error" };
+    return { content: "", color: "default" };
+  })();
 
   useEffect(() => {
+    if (!props?.id) return;
+
+    const spaceRef = ref(storage, `cars/${props.id}`);
     getDownloadURL(spaceRef)
       .then((url) => setCarImage(url))
-      .catch((err) => console.log(err));
-  }, [spaceRef]);
+      .catch(() => {
+        // fallback si image absente
+        setCarImage(
+          "https://firebasestorage.googleapis.com/v0/b/terminal00.appspot.com/o/cars%2Fanonymous.png?alt=media"
+        );
+      });
+  }, [props?.id]);
 
   return (
     <MiniBadge
-      color={`${availabilityColor().color}`}
-      content={`${availabilityColor().content}`}
+      color={badge.color}
+      content={badge.content}
       variant="flat"
-      css={{ p: "0" }}
+      placement="top-right"
       horizontalOffset="45%"
       verticalOffset="45%"
     >
       <Card.Image
         src={carImage}
-        objectFit="fill"
+        objectFit="cover"
         width="100%"
         height={200}
-        alt={"loading.."}
+        alt="car"
       />
     </MiniBadge>
   );

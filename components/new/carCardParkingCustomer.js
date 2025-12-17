@@ -1,125 +1,152 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "../../styles/Parking.module.css";
-import {
-  Grid,
-  Container,
-  Image,
-  Card,
-  Spacer,
-  Text,
-  Row,
-  Col,
-  Button,
-  Avatar,
-} from "@nextui-org/react";
-import MiniBadge from "../MiniBadge";
-import { db, storage } from "../../firebase";
-import { collection, getDocs, orderBy, onSnapshot } from "firebase/firestore";
+import { Button } from "@nextui-org/react";
 
-const CarCardParkingCustomer = ({
+/**
+ * myContent = doc parkingCustomer (occupé)
+ * placeNumber = numéro de place (même pour les slots vides)
+ * onSelect = callback quand on clique (vide => prendre photo, occupé => edit)
+ *
+ * IMPORTANT:
+ * - imageUrl peut être null (si tu as supprimé les photos) => placeholder local
+ */
+export default function CarCardParkingCustomer({
   myContent,
-  setEditMode,
-  setEditModeCarStatus,
-  setWashingArea,
-  washingArea,
-}) => {
+  placeNumber,
+  onSelect,
+}) {
+  const isOccupied = !!myContent?.placeStatus;
+  const rdv = myContent?.rdv === true;
+  const lavage = myContent?.lavage || "sans"; // complet | simple | sans | annuler
+  const basy = myContent?.basy === true; // en cours ?
+  const cs = myContent?.csSelected || "ND";
+
   function csBadgeColor(key) {
-    let csCovert = "";
     switch (key) {
       case "AZIZ":
-        csCovert = "purple";
-        break;
+        return "#7c3aed"; // purple
       case "ABDELALI":
-        csCovert = "green";
-        break;
+        return "#16a34a"; // green
       case "BADR":
-        csCovert = "orange";
-        break;
+        return "#f59e0b"; // orange
       case "MOHAMMED":
-        csCovert = "blue";
-        break;
+        return "#2563eb"; // blue
+        case "MALAK":
+        return "#EC4899"; // hotpink
       case "ND":
-        csCovert = "red";
-        break;
-
+        return "#dc2626"; // red
       default:
-        csCovert = "gray";
-        break;
+        return "#6b7280"; // gray
     }
-    return csCovert;
   }
 
-  return (
-    <Grid>
-      <Grid>
-        <Avatar
-          text="jjjj"
-          color={""}
-          size="sm"
-          textColor="white"
-          css={{
-            position: "absolute",
-            backgroundColor: `${csBadgeColor(myContent.csSelected)}`,
-          }}
-        />
-      </Grid>
-      <MiniBadge
-        content={`${
-          myContent.lavage == "annuler"
-            ? "X"
-            : myContent.basy == false
-            ? "lavé"
-            : ""
-        }`}
-        isSquared
-        color={`${
-          myContent.basy == true
-            ? "warning"
-            : myContent.rdv == true && myContent.lavage !== "annuler"
-            ? "success"
-            : "error"
-        }`}
-        variant={`${myContent.basy == true ? "points" : ""}`}
-        size="xs"
-        horizontalOffset="15%"
-        verticalOffset="10%"
-        css={{
-          display: `${myContent.lavage == "sans" ? "none" : "flex"}`,
-        }}
+  // Lavage badge logique (tu peux ajuster)
+  const lavageLabel =
+    lavage === "annuler" ? "X" : basy ? "..." : lavage === "sans" ? "" : "lavé";
+
+  const lavageClass =
+    lavage === "annuler"
+      ? styles.lavageCancel
+      : basy
+      ? styles.lavageRunning
+      : lavage === "sans"
+      ? ""
+      : styles.lavageOk;
+
+  const showLavageBadge =
+    isOccupied && (lavage === "annuler" || basy || lavage !== "sans");
+
+  // Placeholder SVG inline (aucune requête réseau)
+  const Placeholder = () => (
+    <div className={styles.slotPlaceholder}>
+      <svg
+        className={styles.slotPlaceholderIcon}
+        viewBox="0 0 64 64"
+        fill="none"
       >
-        <MiniBadge
-          enableShadow
-          disableOutline
-          horizontalOffset="10%"
-          verticalOffset="80%"
-          content={`${myContent.rdv == true ? "R" : "S"}`}
-          isSquared
-          color={`${myContent.rdv == true ? "success" : ""}`}
-          size="xs"
-          css={{
-            display: `${myContent.rdv == "ND" ? "none" : "flex"}`,
-          }}
-        >
-          <Button
-            css={{ backgroundColor: "red" }}
-            size={1}
-            onPress={() => {
-              setWashingArea(2);
-              setEditMode(myContent.place);
-              setEditModeCarStatus(myContent);
-            }}
-          >
-            <Image
-              showSkeleton
-              css={{ width: "15vw", height: "10vh" }}
-              src={`${myContent.imageUrl}`}
-              alt={`Image of car in place ${myContent.place}`}
-              objectFit="cover"
-            />
-          </Button>
-        </MiniBadge>
-      </MiniBadge>
-    </Grid>
+        <rect
+          x="8"
+          y="14"
+          width="40"
+          height="28"
+          rx="6"
+          stroke="#7dd3fc"
+          strokeWidth="2"
+        />
+        <path
+          d="M16 34l9-9 7 7 7-7 9 9"
+          stroke="#7dd3fc"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle cx="24" cy="24" r="3" stroke="#7dd3fc" strokeWidth="2" />
+        <path
+          d="M50 38v12"
+          stroke="#7dd3fc"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        <path
+          d="M44 44h12"
+          stroke="#7dd3fc"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
   );
-};
-export default CarCardParkingCustomer;
+
+  return (
+    <div className={styles.slot}>
+      {/* badge place */}
+      <div
+        className={styles.placeBadge}
+        style={{ backgroundColor: csBadgeColor(cs) }}
+        title={`CS: ${cs}`}
+      >
+        {placeNumber}
+      </div>
+
+      {/* petit point top-right (optionnel: ex "lavage concerné") */}
+      {isOccupied && lavage !== "sans" && (
+        <div className={styles.dotTopRight} />
+      )}
+
+      {/* badge lavage */}
+      {showLavageBadge && (
+        <div className={`${styles.lavageBadge} ${lavageClass}`}>
+          {lavageLabel}
+        </div>
+      )}
+
+      <Button
+        className={styles.slotButton}
+        onPress={() =>
+          onSelect?.(isOccupied ? myContent : { place: placeNumber })
+        }
+      >
+        {myContent?.imageUrl ? (
+          <img
+            className={styles.slotMedia}
+            src={myContent.imageUrl}
+            alt={`Place ${placeNumber}`}
+          />
+        ) : (
+          <Placeholder />
+        )}
+      </Button>
+
+      {/* barre RDV / SANS RDV */}
+      {isOccupied && (
+        <div
+          className={`${styles.rdvBar} ${
+            rdv ? styles.rdvGreen : styles.rdvRed
+          }`}
+        >
+          {rdv ? "R" : "S"}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,31 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useRef } from "react";
-import { db, storage, auth } from "../../firebase";
-
-import {
-  updateDoc,
-  doc,
-  setDoc,
-  serverTimestamp,
-  collection,
-} from "firebase/firestore";
-import {
-  Avatar,
-  Button,
-  Image,
-  Text,
-  Card,
-  Container,
-  Grid,
-  Input,
-  Radio,
-  Loading,
-  Spacer,
-  Row,
-} from "@nextui-org/react";
+import React from "react";
+import { Avatar, Container, Grid, Spacer, Text } from "@nextui-org/react";
 import MiniBadge from "../MiniBadge";
 import CarCardParkingCustomer from "./carCardParkingCustomer";
 import SemiCircleProgressBar from "./SemiCircleProgressBar";
+
+function tsSeconds(createdAt) {
+  // Firestore Timestamp => createdAt.seconds
+  if (!createdAt) return 0;
+  if (typeof createdAt?.seconds === "number") return createdAt.seconds;
+  // Date => getTime
+  if (createdAt instanceof Date) return Math.floor(createdAt.getTime() / 1000);
+  return 0;
+}
 
 export default function NextLavage({
   listAttenteLavage,
@@ -33,40 +19,31 @@ export default function NextLavage({
   setEditModeCarStatus,
   setWashingArea,
   washingArea,
-  setWashingDashboardData,
   washingDashboardData,
 }) {
-  const listLavageRdv = listAttenteLavage.filter((car) => {
-    if (car.rdv == true) {
-      return car;
-    }
-  });
-  const listLavageSrdv = listAttenteLavage.filter((car) => {
-    if (car.rdv == false) {
-      return car;
-    }
-  });
+  const listLavageRdv = listAttenteLavage.filter((car) => car?.rdv === true);
+  const listLavageSrdv = listAttenteLavage.filter((car) => car?.rdv === false);
 
-  const orderedListLavageRdv = listLavageRdv.sort(
-    (a, b) => b.createdAt.seconds - a.createdAt.seconds
+  const orderedListLavageRdv = [...listLavageRdv].sort(
+    (a, b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt)
   );
-  const orderedListLavageSrdv = listLavageSrdv.sort(
-    (a, b) => b.createdAt.seconds - a.createdAt.seconds
+  const orderedListLavageSrdv = [...listLavageSrdv].sort(
+    (a, b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt)
   );
 
   return (
     <Container css={{ display: "contents" }}>
-      <Grid.Container justify="center" css={{ backgroundColor: "orange" }}>
+      <Grid.Container justify="center">
         <Text size="md" color="primary">
           Liste Lavage Sans RDV
         </Text>
       </Grid.Container>
 
-      <Grid.Container justify="space-evenly" css={{ backgroundColor: "pink" }}>
-        {orderedListLavageSrdv.map((myContent, index) => (
+      <Grid.Container justify="space-evenly">
+        {orderedListLavageSrdv.map((myContent) => (
           <CarCardParkingCustomer
+            key={myContent.id}
             myContent={myContent}
-            key={index}
             setEditMode={setEditMode}
             setEditModeCarStatus={setEditModeCarStatus}
             setWashingArea={setWashingArea}
@@ -74,17 +51,18 @@ export default function NextLavage({
           />
         ))}
       </Grid.Container>
-      <Grid.Container justify="center" css={{ backgroundColor: "orange" }}>
+
+      <Grid.Container justify="center">
         <Text size="md" color="primary">
           Liste Lavage RDV
         </Text>
       </Grid.Container>
 
-      <Grid.Container justify="space-evenly" css={{ backgroundColor: "pink" }}>
-        {orderedListLavageRdv.map((myContent, index) => (
+      <Grid.Container justify="space-evenly">
+        {orderedListLavageRdv.map((myContent) => (
           <CarCardParkingCustomer
+            key={myContent.id}
             myContent={myContent}
-            key={index}
             setEditMode={setEditMode}
             setEditModeCarStatus={setEditModeCarStatus}
             setWashingArea={setWashingArea}
@@ -92,51 +70,35 @@ export default function NextLavage({
           />
         ))}
       </Grid.Container>
-      <Grid.Container justify="center" css={{ backgroundColor: "orange" }}>
+
+      <Grid.Container justify="center">
         <Text size="md" color="primary">
-          Realisations
+          Réalisations
         </Text>
       </Grid.Container>
-      <Spacer y={0.5}></Spacer>
+
+      <Spacer y={0.5} />
 
       {washingDashboardData && (
         <Grid.Container justify="center" gap={2}>
           <Grid>
-            <MiniBadge
-              color="error"
-              content={washingDashboardData.complet}
-              shape="rectangle"
-              size="md"
-            >
+            <MiniBadge color="error" content={washingDashboardData.complet ?? 0} shape="rectangle" size="md">
               <Avatar squared size="lg" text="C" />
             </MiniBadge>
           </Grid>
           <Grid>
-            <MiniBadge
-              disableOutline
-              color="error"
-              content={washingDashboardData.simple}
-              shape="circle"
-              size="md"
-            >
+            <MiniBadge color="error" content={washingDashboardData.simple ?? 0} shape="circle" size="md">
               <Avatar size="lg" text="S" />
             </MiniBadge>
           </Grid>
           <Grid>
-            <MiniBadge
-              disableOutline
-              color="error"
-              content={washingDashboardData.annuler}
-              shape="circle"
-              size="md"
-            >
+            <MiniBadge color="error" content={washingDashboardData.annuler ?? 0} shape="circle" size="md">
               <Avatar size="lg" text="X" />
             </MiniBadge>
           </Grid>
+
           <Grid css={{ width: "30vw", maxWidth: "100px" }}>
-            <SemiCircleProgressBar
-              washingDashboardData={washingDashboardData}
-            ></SemiCircleProgressBar>
+            <SemiCircleProgressBar washingDashboardData={washingDashboardData} />
           </Grid>
         </Grid.Container>
       )}

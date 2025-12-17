@@ -312,3 +312,7 @@ top: -390px;
 .dark .home .text{
     color: var(--text-color);
 }
+html, body {
+  height: 100%;
+  overflow: hidden;
+}

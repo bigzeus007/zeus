@@ -1,34 +1,291 @@
+/* =========================
+   Parking layout (CSS Module)
+   ========================= */
 
-.parking {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-gap: 10px;
+.parkingRoot {
+  --gap: 14px;
+  --radius: 18px;
+  --cardMin: 150px; /* ajuste si tu veux plus gros/petit */
+  --shadow: 0 10px 28px rgba(0,0,0,.10);
+  --border: 2px solid #2d5cff;
+
+  padding: 12px 14px 20px;
+  overflow-x: hidden; /* évite scroll horizontal */
 }
 
-.row {
+.parkingHeader {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.parkingTitle {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.washShortcut {
+  display: flex;
   align-items: center;
 }
 
-.place {
-  width: 50px;
-  height: 50px;
-  border: 1px solid black;
+.washBtn {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
 }
 
-.vertical {
-  transform: rotate(90deg);
+/* Desktop : Zone 3 à droite */
+.parkingLayout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--gap);
+  align-items: start;
 }
 
-.horizontal {
-  transform: rotate(0deg);
+/* Mobile / petits écrans : Zone 3 passe en bas */
+@media (max-width: 1024px) {
+  .parkingLayout {
+    grid-template-columns: 1fr;
+  }
 }
 
-.available {
-  background-color: green;
+.leftCol,
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
 }
 
-.occupied {
-  background-color: red;
+/* Zone box */
+.zoneBox {
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: rgba(255,255,255,.10);
+  box-shadow: var(--shadow);
 }
+
+.zoneHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.zoneLabel {
+  font-weight: 800;
+  color: #1f4fff;
+}
+
+.zoneRange {
+  font-weight: 800;
+  color: #1f4fff;
+  opacity: .9;
+}
+
+/* ✅ UNE grille unique pour les 3 zones */
+.zoneGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--cardMin), 1fr));
+  gap: 12px;
+}
+
+/* Sur mobile : cartes un peu plus grandes */
+@media (max-width: 480px) {
+  .parkingRoot {
+    --cardMin: 160px;
+  }
+}
+
+/* ---------- Card place ---------- */
+
+.placeCard {
+  width: 100%;
+}
+
+/* ✅ Important : neutralise tout comportement interne NextUI */
+.placeInner {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: rgba(255,255,255,.12);
+}
+
+/* ✅ Gabarit FIXE : même taille vide/occupé */
+.photoWrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* rectangle "devant véhicule" */
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: rgba(0,0,0,.06);
+}
+
+/* ✅ L’image ne doit JAMAIS changer la taille de la carte */
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover; /* si tu veux "fit in" => remplace par contain */
+  object-position: center;
+}
+
+/* Badge place (cercle) */
+.badgePlace {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 900;
+  font-size: 14px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.25);
+}
+
+/* RDV / SANS RDV */
+.badgeRdv {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  height: 22px;
+  min-width: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 12px;
+  color: white;
+  box-shadow: 0 8px 18px rgba(0,0,0,.25);
+}
+
+.rdvOk { background: #16a34a; }  /* R */
+.rdvNo { background: #dc2626; }  /* S */
+
+/* Lavage badge */
+.badgeWash {
+  position: absolute;
+  bottom: 10px;
+  left: 62px;
+  height: 22px;
+  min-width: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 12px;
+  color: white;
+  box-shadow: 0 8px 18px rgba(0,0,0,.25);
+}
+
+.wash_success { background: #16a34a; } /* lavé */
+.wash_warning { background: #f59e0b; } /* en cours (points) */
+.wash_error   { background: #dc2626; } /* X / annulé */
+
+.washPoints::after {
+  content: "···";
+  letter-spacing: 2px;
+  font-weight: 900;
+}
+
+/* Petit + pour vide */
+.plusHint {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.18);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(0,0,0,.25);
+}
+
+/* Bouton "..." (action) */
+.moreBtn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 24px;
+  min-width: 36px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #f59e0b;
+  color: #111827;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(0,0,0,.18);
+}
+
+/* ---------- CS Counters ---------- */
+
+.csBar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 6px;
+  flex-wrap: wrap;
+}
+
+.csItem {
+  display: grid;
+  place-items: center;
+}
+
+/* =========================
+   Modal preview (image zoom)
+   ========================= */
+
+.modalBody {
+  padding: 12px 16px 18px;
+}
+
+.modalImgWrap {
+  width: 100%;
+  max-height: 80vh;         /* ✅ ne dépasse jamais l'écran */
+  overflow: hidden;         /* ✅ pas de débordement */
+  display: grid;
+  place-items: center;
+}
+
+.modalImg {
+  max-width: 100%;          /* ✅ largeur limitée */
+  max-height: 80vh;         /* ✅ hauteur limitée */
+  width: auto;
+  height: auto;
+  object-fit: contain;      /* ✅ tout visible */
+  border-radius: 14px;
+}
+
+.csCircle {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.18);
+  user-select: none;
+}
+
+
