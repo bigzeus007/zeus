@@ -151,14 +151,22 @@ const CustomerParking = ({ user }) => {
 
   // Badge lavage
   function lavageBadge(myContent) {
-    // ✅ place vide => aucun badge lavage
+    // ✅ Jamais de badge lavage si la place est vide
     if (!myContent?.placeStatus) return { show: false };
 
-    if (myContent.lavage === "sans") return { show: false };
-    if (myContent.lavage === "annuler" || myContent.lavage === "annulé")
+    const lvg = (myContent?.lavage || "sans").toLowerCase();
+
+    // ✅ "sans" ou "nd" => rien
+    if (lvg === "sans" || lvg === "nd") return { show: false };
+
+    if (lvg === "annuler" || lvg === "annulé")
       return { show: true, txt: "X", color: "error", variant: "solid" };
+
+    // ✅ basy false => lavé
     if (myContent.basy === false)
       return { show: true, txt: "lavé", color: "success", variant: "solid" };
+
+    // ✅ sinon => en cours (points)
     return { show: true, txt: "", color: "warning", variant: "points" };
   }
 

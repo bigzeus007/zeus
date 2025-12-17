@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
-    "@next/font": "13.1.6",
     "@nextui-org/react": "^1.0.0-beta.12",
     "dotenv": "^16.0.3",
     "firebase": "^12.6.0",
@@ -34,5 +33,4 @@
   "engines": {
     "node": ">=20"
   }
-
 }
